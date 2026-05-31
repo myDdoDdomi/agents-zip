@@ -1,0 +1,23 @@
+{
+  "$comment": "dev_agents MCP 예시 — 대상 프로젝트로 복사 후 '.mcp.json'으로 rename. 기본은 GitHub+Context7 2개만. 스택 MCP는 필요 시 1개만 추가(총 3개 이하 권장 — 과다 연결은 토큰 낭비·정확도 저하). 비밀값은 절대 넣지 말고 ${ENV}로 치환, .gitignore로 제외.",
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "$comment": "GitHub 공식 원격 MCP. 최초 1회 브라우저 OAuth(PAT 불필요). 이슈·PR·코드 리뷰. PR 머지/쓰기 작업은 사람 승인 게이트."
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "$comment": "Context7 — 라이브러리 최신 공식 문서를 컨텍스트로 주입(훈련데이터 노후화 방지). 무료 원격. 한도 상향이 필요하면 API 키를 헤더/환경변수로."
+    }
+  },
+  "$optional_stack_servers": {
+    "$comment": "아래는 범위에 따라 '하나만' 골라 mcpServers에 추가. 운영 MCP는 migration-engineer 한 역할에만, read-only·전용계정·사람 승인 게이트로.",
+    "playwright": "npx @playwright/mcp@latest — 프론트 브라우저 동작 자가검증(※ E2E 테스트 스위트는 QA_agents 영역). 보안 경계 아님 — 환경 격리.",
+    "supabase": "Supabase MCP — DB 스키마/쿼리(마이그레이션). pre-1.0, read-only 모드에서도 mutating 노출 이슈 → 전용계정·승인 게이트.",
+    "kubernetes": "Kubernetes MCP — 클러스터 운영. 전용 ServiceAccount·read-only 우선·승인 게이트.",
+    "terraform": "Terraform MCP — IaC/레지스트리. local use 권고·토큰 관리.",
+    "figma": "https://mcp.figma.com/mcp — 공식 Figma(Dev Mode/Code Connect). 디자인-코드 정합·기존 컴포넌트 재사용(프론트+디자인 접점)."
+  }
+}

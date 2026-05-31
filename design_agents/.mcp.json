@@ -1,0 +1,9 @@
+{
+  "$comment": "Figma 공식(first-party) MCP — Figma 측 read-only. 컴포넌트/변수/레이아웃/스타일 읽기, 프레임→코드 생성, Code Connect 정합. 인증은 비밀값을 파일에 넣지 않고 브라우저 OAuth로 1회 수행한다(/mcp 또는 최초 호출 시). 설치/인증: docs/FIGMA-MCP.md. 서드파티 쓰기형(figma-console-mcp)은 Figma에 '생성/토큰 push'가 필요할 때만 사람 승인 게이트와 함께 별도 추가.",
+  "mcpServers": {
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}
