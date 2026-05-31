@@ -1,0 +1,15 @@
+{
+  "$comment": "팀 공유 Google Workspace(Drive/Docs) MCP 설정. 비밀값은 레포에 넣지 말고 각자 환경변수로 두세요(${VAR} 자동치환). 발급받은 client_secret.json 경로는 GOOGLE_CLIENT_SECRET_PATH로 지정. 설치/인증: docs/GOOGLE-DRIVE-MCP.md",
+  "mcpServers": {
+    "google-workspace": {
+      "command": "uvx",
+      "args": ["workspace-mcp", "--single-user", "--tools", "docs", "drive", "sheets", "slides"],
+      "env": {
+        "GOOGLE_CLIENT_SECRET_PATH": "${GOOGLE_CLIENT_SECRET_PATH}",
+        "USER_GOOGLE_EMAIL": "${USER_GOOGLE_EMAIL}",
+        "WORKSPACE_MCP_CREDENTIALS_DIR": "${WORKSPACE_MCP_CREDENTIALS_DIR}",
+        "OAUTHLIB_INSECURE_TRANSPORT": "1"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# === 비밀값/인증정보 — 절대 커밋 금지 ===
+.env
+.env.*
+*.local
+client_secret*.json
+*.apps.googleusercontent.com.json
+credentials/
+.credentials/
+.google-mcp/
+.google_workspace_mcp/
+.gdrive-server-credentials.json
+*token*.json
+*.pem
+*.key
+
+# === 백업/임시 ===
+docs_agents_history_backup.bundle
+/_drafts/
+*.tmp
+gstack.json
+
+# === Claude Code 로컬 설정 (개인별) ===
+.claude/settings.local.json
+
+# === OS / 에디터 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
