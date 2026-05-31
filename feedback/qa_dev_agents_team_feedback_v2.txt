@@ -1,0 +1,47 @@
+이번 사이클에서 두 팀을 실제로 지휘하며 관찰한 것을 근거로 피드백드립니다. (추측이 아니라 이번 세션에서 누가 무엇을 잡고 놓쳤는지, 토큰/도구 사용량까지 기반으로요.)
+
+---
+🔬 QA agents 팀 피드백
+
+잘한 점
+
+- 에뮬레이터 실측이 압권. security-test-engineer가 SEC-1/SEC-2를 정적 추론이 아니라 실제 에뮬레이터로 재현(attacker_read 200·delete 200)했고, 수정 후 fix-verify도 30개 단언 실측으로 닫았습니다. CLAUDE.md "재현 의무" 규율이 말로만이 아니라 실제로 작동했습니다.
+- bug-triager의 재검증 게이트가 진짜 게이트로 기능. 다른 에이전트 주장을 그대로 안 받고 독립 검증했습니다 — regression이 R3(라우트 충돌)을 Sev2로 올린 걸 "정적>동적 매칭이라 현재 정상"으로 강등, api의 "grading 콜드스타트 apiKey=undefined 캐싱" 주장을 코드 Read로 틀렸다고 정정(실제론 throw). 거짓 강도를 걸러낸 게 이번 사이클 품질의 핵심이었습니다.
+- qa-lead가 과잉주장을 안 함. 운영 firestore 규칙을 못 본다는 한계를 숨기지 않고 "구성 Sev2(미검증-주장)"로 등급 보류 → 정직했습니다.
+- exploratory-tester의 F5(TOCTOU) 발견이 고가치. 도구 10회만 쓰고도 restore-purge 레이스로 인한 데이터 영구손실 경로를 코드 정독으로 찾아냈습니다.
+
+아쉬운 점
+
+- 에이전트 간 심각도 편차가 첫 패스에서 컸습니다. R3(regression Sev2 ↔ triager 강등), F1/F5(exploratory "Sev2 의심"). 공유 루브릭이 있는데도 bug-triager까지 가야 정렬됐습니다. 루브릭을 각 에이전트의 첫 보고 시점에 강제했다면 triager 부하가 줄었을 겁니다.
+- rules↔클라이언트 쿼리 정합을 첫 사이클에 아무도 안 봤습니다. security 1차 검수는 "rules 부재"만 봤고, "이 컬렉션 read 규칙이면 기존 list 쿼리가 통과하는가?"는 dev 수정 이후 회귀에서야 드러났습니다(아래 dev 팀 Blocker와 직결). 보안/회귀 체크리스트에 쿼리-규칙 정합 항목이 빠져 있었습니다.
+- 토큰 편차. regression이 83k(도구 39회)로 가장 무거웠는데 산출물 대비 과했습니다. 반면 exploratory는 60k로 더 높은 가치를 냈습니다 — 깊이 배분을 리스크에 더 맞출 여지가 있습니다.
+
+---
+🛠 dev agents 팀 피드백
+
+잘한 점
+
+- code-reviewer가 사이클을 구원했습니다. dev-lead와 implementer 셋이 모두 놓친 Blocker — "firestore.rules가 weeks.read를 userId 소유권으로 요구하는데 getWeeks는 curriculumId로만 쿼리 → Firestore가 list 쿼리를 전면 거부"를 잡았습니다. 이걸 안 잡았으면 P0 보안 수정이 대시보드·주차 그리드를 런타임에 전부 깨뜨린 채 배포될 뻔했습니다. 리뷰 단계의 존재 가치를 입증했습니다.
+- dev-lead의 계획 품질이 높았습니다. 실제 스키마를 grep으로 확인(weeks.userId 실존), callable 시그니처 설계, 그리고 파일 충돌 매트릭스(firestore.ts/maintenance.ts/TrashPage.tsx를 여러 그룹이 건드림)를 미리 식별 → 덕분에 implementer 3개를 파일 소유권 분리로 충돌 없이 병렬 돌릴 수 있었습니다.
+- 자가검증 Exit가 일관됐습니다. 모든 implementer가 양쪽 tsc --noEmit EXIT 0을 실제 실행해 보고했고, 호출처를 grep 전수 확인했습니다.
+
+아쉬운 점
+
+- Blocker의 근본 원인은 dev-lead 계획의 빈틈이었습니다. dev-lead가 "weeks를 필드 직접 검증으로 단순화"하면서 list 쿼리 영향을 (확인 필요)로만 흘리고 검증 책임을 명확히 할당하지 않았습니다. rules를 작성하는 implementer가 "이 규칙으로 기존 클라 쿼리가 통과하나?"를 self-check 했어야 합니다. 리뷰가 잡았으니 망정이지, 구조적으로 한 단계 늦게 발견됐습니다.
+- implementer가 지침을 임의 해석한 사례(API-1). "openai.ts의 getClient가 export 안 됨"을 이유로 싱글턴을 매 호출 new 생성으로 바꿔 싱글턴 이점을 없앴습니다. (확인 필요)로 표기는 했지만, 지침은 "싱글턴 재사용"이었으니 막혔을 때 멈추고 묻기보다 우회한 케이스입니다. code-reviewer가 잡아 재수정했습니다.
+- 위 둘의 공통점: code-reviewer 의존도가 높았습니다. 리뷰가 강해서 막았지만, implementer 단계의 self-check(쿼리 정합, 지침 이탈 시 정지)가 보강되면 리뷰가 안전망이 아니라 최종 확인이 됩니다.
+
+---
+🔗 교차 팀(프로세스) 관찰
+
+- QA→Dev 핸드오프가 매끄러웠습니다. bug-triager의 트리아지표(P0~P3 + file:line)가 dev-lead 입력으로 거의 그대로 들어갔습니다.
+- fix-verify 루프를 QA가 닫은 게 규율대로 작동했습니다(dev 수정 → regression/security 재검증). 발견과 검증 양쪽에서 에뮬레이터 실측이 일관되게 쓰인 게 이 사이클의 신뢰도를 만들었습니다.
+- 가장 위험했던 순간: rules-쿼리 정합 누락. QA(쿼리 정합 미점검) → dev-lead(계획 빈틈) → implementer(미발견)로 세 번 통과한 결함을 code-reviewer가 마지막에 잡았습니다. 한 군데서만 체크리스트에 있었어도 더 일찍 막혔습니다.
+
+---
+💡 개선 제안 (반영하면 다음 사이클이 더 강해짐)
+
+1. security-test-engineer + code-reviewer 정의에 "rules↔클라이언트 쿼리 정합" 체크 항목 추가 — Firestore rules는 list 쿼리를 문서 단위로 평가하지 않으므로 소유권 필터가 쿼리에 있어야 함. 이번 Blocker의 재발 방지.
+2. 심각도 루브릭을 각 에이전트 첫 보고에 강제 — triager 정렬 부하 감소.
+3. implementer 정의에 "지침과 다른 결정을 할 땐 우회 대신 (확인 필요)로 정지·보고" 강화 — API-1 류 임의 해석 방지.
+4. dev-lead가 (확인 필요)를 남길 땐 검증 책임자를 명시하도록 — "확인 필요"가 아무에게도 할당 안 되면 빈틈이 됨.

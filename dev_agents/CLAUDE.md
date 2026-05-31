@@ -90,6 +90,16 @@
 
 ---
 
+## 🔬 실전 피드백 v2 (2사이클 교훈) — 각 `agents/*.md`에도 박힘
+
+> 이번 사이클 최대 위험: **rules-쿼리 정합 누락이 QA(미점검)→dev-lead(계획 빈틈)→implementer(미발견) 세 번을 통과**한 걸 code-reviewer가 마지막에 잡음. code-reviewer 안전망 의존을 줄이고 앞단에서 막는다.
+
+- **rules↔클라이언트 쿼리 정합** (`code-reviewer`·`implementer`): Firestore 등 행수준 권한 규칙은 list 쿼리를 문서 단위로 평가하지 않으므로, read/list 규칙을 바꿀 때 **"기존 클라 list 쿼리가 이 규칙으로 통과하는가?"**를 점검한다(없으면 list 전면 거부 → 런타임 장애). implementer self-check 1차 + code-reviewer 게이트.
+- **지침 이탈 시 우회 금지·정지 보고** (`implementer`): 예상 export 없음·시그니처 불일치 등으로 막히면 임의 우회 대신 멈춰 `(확인 필요)`로 보고. 명시적 설계 의도(예: 싱글턴 재사용)를 우회로 무력화 금지.
+- **`(확인 필요)`에는 검증 책임자 명시** (`dev-lead`): 미해결 리스크를 남길 때 누가 검증·해소할지 반드시 할당. 런타임 위험 항목(보안규칙·스키마·쿼리정합)은 self-check 또는 code-reviewer 게이트로 명시.
+
+---
+
 ## 📂 리포 구조
 
 ```
