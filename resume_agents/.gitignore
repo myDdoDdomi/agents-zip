@@ -1,0 +1,29 @@
+# 개인 인증/비밀값 — 절대 커밋 금지
+.env
+.env.*
+*.local
+*.local.json
+client_secret*.json
+*.apps.googleusercontent.com.json
+credentials/
+.credentials/
+.google-mcp/
+.google_workspace_mcp/
+.gdrive-server-credentials.json
+*token*
+*.token
+.mcp.local.json
+
+# OS / 에디터
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Claude Code 로컬 설정 (개인별)
+.claude/settings.local.json
+
+# 임시/잔여 산출물 (개인 이력서·포트폴리오 초안은 레포에 올리지 않음)
+/_drafts/
+*.tmp
