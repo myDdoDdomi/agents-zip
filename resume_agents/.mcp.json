@@ -1,5 +1,5 @@
 {
-  "$comment": "resume_agents 팀 공유 MCP. (1) Google Workspace는 docs·drive 도구만 활성화해 권한 표면 최소화(Sheets/Slides/Calendar 미사용) — 비밀값은 레포에 넣지 말고 환경변수로(${VAR} 자동치환). 발급받은 client_secret.json 경로는 GOOGLE_CLIENT_SECRET_PATH로 지정. 설치/인증: docs/GOOGLE-WORKSPACE-MCP.md. (2) GitHub는 공식 원격 HTTP MCP — 최초 1회 브라우저 OAuth(PAT 불필요), 경력 근거 '읽기 전용' 권장. 설치/인증: docs/GITHUB-MCP.md",
+  "$comment": "resume_agents 팀 공유 MCP. (1) Google Workspace는 docs·drive 도구만 활성화해 권한 표면 최소화(Sheets/Slides/Calendar 미사용) — 비밀값은 레포에 넣지 말고 환경변수로(${VAR} 자동치환). 발급받은 client_secret.json 경로는 GOOGLE_CLIENT_SECRET_PATH로 지정. 설치/인증: docs/GOOGLE-WORKSPACE-MCP.md. (2) GitHub는 공식 원격 HTTP MCP — 이 엔드포인트는 동적 클라이언트 등록(DCR) 미지원이라 자동 브라우저 OAuth가 작동하지 않음. fine-grained PAT를 환경변수 GITHUB_PAT로 주입해 Authorization 헤더로 인증한다(읽기 전용 권장: Contents/Metadata=Read-only). 토큰은 절대 레포에 넣지 말 것(${VAR} 자동치환). 설치/인증: docs/GITHUB-MCP.md",
   "mcpServers": {
     "google-workspace": {
       "command": "uvx",
@@ -14,7 +14,10 @@
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
-      "$comment": "GitHub 공식 원격 MCP. 최초 1회 브라우저 OAuth(PAT 불필요). 이 팀은 레포·기여·스택을 '경력 근거'로 읽기만 한다 — 쓰기(이슈/PR/머지) 작업은 하지 않는다."
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      },
+      "$comment": "GitHub 공식 원격 MCP. 이 엔드포인트는 DCR 미지원 → 자동 OAuth가 안 되므로 fine-grained PAT를 환경변수 GITHUB_PAT로 주입한다(빈 토큰이면 빈 Bearer가 전송돼 HTTP 400). 발급/등록/재시작 절차는 docs/GITHUB-MCP.md. 이 팀은 레포·기여·스택을 '경력 근거'로 읽기만 한다 — 쓰기(이슈/PR/머지) 작업은 하지 않는다(PAT 권한도 Contents/Metadata=Read-only 권장)."
     }
   }
 }

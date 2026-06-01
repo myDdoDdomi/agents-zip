@@ -17,7 +17,7 @@
 1. **이 폴더를 Claude Code로 엽니다.**
 2. (1회) MCP 인증:
    - **Google Workspace(Docs/Drive)** — `docs/GOOGLE-WORKSPACE-MCP.md` (Google OAuth, client_secret 경로 환경변수)
-   - **GitHub(경력 근거 읽기)** — `docs/GITHUB-MCP.md` (브라우저 OAuth 1회, PAT 불필요)
+   - **GitHub(경력 근거 읽기)** — `docs/GITHUB-MCP.md` (fine-grained PAT를 `GITHUB_PAT` 환경변수로 주입, 읽기 전용 권장 / 자동 OAuth 미지원)
    - MCP를 아직 못 써도 폴백(붙여넣기)으로 동작합니다.
 3. 한국어로 시킵니다. 가장 쉬운 시작은 `/tailor`:
    ```
@@ -85,7 +85,7 @@
 
 ## 🔌 MCP / 권한 (요약)
 - **Google Workspace**: `docs`·`drive` 도구만 활성화(권한 표면 최소화). 쓰기 가능 → 덮어쓰기 전 사용자 확인.
-- **GitHub**: 공식 원격 MCP, **읽기 전용** 권장(경력 근거). PAT 불필요, 브라우저 OAuth 1회.
+- **GitHub**: 공식 원격 MCP, **읽기 전용** 권장(경력 근거). fine-grained PAT를 `GITHUB_PAT` 환경변수로 주입(Contents/Metadata=Read-only). 이 엔드포인트는 자동 OAuth(DCR) 미지원 — PAT가 비면 `/mcp`에서 HTTP 400.
 - 기업·직무 조사: 빌트인 **WebSearch/WebFetch**(별도 MCP 없음).
 - **비밀값은 레포 금지** — `${ENV}` 치환 + `.gitignore`(client_secret·token·.env 류 차단).
 

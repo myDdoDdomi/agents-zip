@@ -124,7 +124,7 @@ GitHub 경력 근거 ┐
 
 ## 9. GitHub(경력 근거) 작업 규칙
 
-- 연결 방식: **GitHub 공식 원격 MCP**(OAuth, 설치/인증은 `docs/GITHUB-MCP.md`). PAT 불필요, 브라우저 OAuth 1회.
+- 연결 방식: **GitHub 공식 원격 MCP**(HTTP, 설치/인증은 `docs/GITHUB-MCP.md`). fine-grained PAT를 환경변수 `GITHUB_PAT`로 주입(읽기 전용 권장: Contents/Metadata=Read-only). 이 엔드포인트는 자동 OAuth(DCR) 미지원 — 토큰이 비면 HTTP 400.
 - **읽기 전용으로만 쓴다.** 레포·커밋·기여·언어/스택을 **경력 근거**로 읽기만 한다. 이슈/PR/머지 등 쓰기 작업은 하지 않는다.
 - **기여도를 사실대로.** 공동 레포는 본인 커밋·역할을 기준으로 기여를 기술한다. fork·튜토리얼 따라하기·연습 레포는
   그대로 표기하고 "주도 개발"로 부풀리지 않는다(§2 거버넌스).
