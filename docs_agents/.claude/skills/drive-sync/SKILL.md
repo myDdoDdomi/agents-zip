@@ -24,7 +24,7 @@ description: 완성/수정된 문서를 팀 공유 Google Drive(Docs/Sheets)에 
    - 없으면 → `config/drive-config.md` 규칙에 맞춰 새 문서를 만든다. **본문을 plain text로 통째로 넣지 않는다.**
 2. **서식은 `doc-formatter` 에이전트에 위임한다.** (직접 plain text를 밀어넣지 말 것)
    - `doc-formatter`가 `docs/DOC-FORMATTING.md` 표준대로 커버 헤더·제목 스타일·네이티브 표·브랜드 색(#1F3A5F)을 입힌다.
-   - Sheets면 헤더 고정·색·줄바꿈·필터까지 적용한다.
+   - **Sheets로 작성/수정**할 때는 `docs/DOC-FORMATTING.md` **§3-1(작성 절차·도구·A1 범위·문서종류별 컬럼·수정 안전절차)** 를 따른다 — 헤더 1행은 컬럼=템플릿 일치, 데이터는 2행부터, 수정 시 헤더 보존. 헤더 고정·색·줄바꿈·필터까지 적용한다.
 3. 반영 후 **문서 URL**을 사용자에게 보고한다. (새 Doc은 보통 내 드라이브 루트에 생기므로 대상 폴더로 이동까지 확인)
 
 ## 중복 생성 방지

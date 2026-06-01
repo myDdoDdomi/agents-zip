@@ -97,6 +97,7 @@
 | 테스트케이스 | `/test-case` | `qa-engineer` | `templates/테스트케이스.md` |
 | 회의록 | `/meeting-notes` | `tech-writer` | `templates/회의록.md` |
 | 릴리즈노트 | `/release-notes` | `tech-writer` | `templates/릴리즈노트.md` |
+| 일정(캘린더) | `/calendar` | `calendar-manager` | — (회의록·릴리즈와 연계) |
 | (전 문서) 검수·첨삭 | `/doc-review` | `doc-reviewer` | — |
 | (전 문서) Drive 반영·서식 | `/drive-sync` | `doc-formatter` | `docs/DOC-FORMATTING.md` |
 
@@ -110,13 +111,16 @@
 ```
 새 문서를 만들 때 상위 문서가 Drive에 있으면 먼저 참조해 일관성을 맞춥니다.
 
-## 5. Google Drive 작업 규칙
+## 5. Google Workspace 작업 규칙 (Drive · Docs · Sheets · Slides · Calendar)
 
 - 연결 방식: **Google Workspace MCP** (설치/인증은 `docs/GOOGLE-DRIVE-MCP.md`).
   팀 공유 설정은 레포 루트 `.mcp.json`에 있고, 인증(OAuth)은 각자 1회 수행합니다.
-  지원 도구: **Docs(문서) · Sheets(스프레드시트) · Slides · Drive**.
+  지원 도구: **Docs(문서) · Sheets(스프레드시트) · Slides · Drive · Calendar(일정)**.
 - **산출 형식(Docs vs Sheets)은 문서 종류에 맞춘다.** 표·매트릭스 중심 문서는 Sheets로,
   서술·다이어그램 중심 문서는 Docs로 만든다. 기존 문서가 있으면 **그 형식을 따른다**.
+- **Sheets는 읽기뿐 아니라 쓰기/수정도 지원한다.** 셀 값 입력·행 추가·기존 시트 갱신이
+  가능하므로, 요구사항정의서·테스트케이스 등 표형 문서는 Sheets에 **직접 작성·수정**한다.
+  덮어쓰기 전에는 §아래 "쓰기 전 확인" 규칙을 따른다.
 
   | Sheets(스프레드시트) 권장 | Docs(문서) 권장 |
   |---|---|
@@ -133,6 +137,20 @@
   우선합니다.
 - MCP 미연결 환경: Drive 도구가 없으면 마크다운 초안을 산출물로 제공하고, 사용자가
   복사해 Drive에 붙여넣도록 안내합니다. (폴백 모드)
+
+### 5-1. Calendar(일정) 작업 규칙 — `calendar-manager` / `/calendar`
+
+캘린더는 **문서화의 보조 역량**입니다(회의록·릴리즈 일정 연계). 일정 관리 자체를
+과도하게 키우지 말고, 아래 권한 경계를 지킵니다.
+
+| 작업 | 등급 | 규칙 |
+|---|---|---|
+| 조회/요약 | 안전 | 자유롭게 수행 |
+| 생성/수정 | 주의 | 대상·일시·참석자·캘린더를 **사용자에게 확인 후** 실행. **추측 일정 생성 금지** |
+| 삭제·대량 변경 | 파괴적 | 무엇을 지우는지 보여주고 **사람 최종 승인** 후에만 실행 (Human-in-the-loop) |
+
+- 타임존을 명시하고, 새 일정 생성 전 같은 시간대 충돌을 점검한다.
+- 회의 일정 → `/meeting-notes`, 릴리즈 일정 → `/release-notes`로 문서 작성을 이어 제안한다.
 
 ## 6. 품질 기준 (검수 통과 조건)
 
