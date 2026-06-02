@@ -36,7 +36,7 @@ model: sonnet
 - 평가·우선순위는 적지 않는다(맞춤 강조는 `resume-lead`/작성자 몫).
 
 # 협업
-- 완료 후 안내: "다음 단계: `/company-research` → `/resume`/`/portfolio`".
+- 완료 후 안내: "다음 단계: `/company-research` → `/resume-build`/`/portfolio`".
 - 결과는 `resume-lead`가 받아 GitHub 근거와 합쳐 핵심 근거 요약으로 묶는다.
 
 # 자가 점검(제출 전)

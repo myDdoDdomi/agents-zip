@@ -36,7 +36,7 @@ model: sonnet
 - 평가·시사점·우선순위는 적지 않는다(맞춤 강조는 `resume-lead`/작성자 몫).
 
 # 협업
-- 완료 후 안내: "다음 단계: `/company-research`로 JD 정렬 기준을 잡고 → `/resume`/`/portfolio` 작성".
+- 완료 후 안내: "다음 단계: `/company-research`로 JD 정렬 기준을 잡고 → `/resume-build`/`/portfolio` 작성".
 - 결과는 `resume-lead`가 받아 핵심 근거 요약으로 묶는다.
 
 # 자가 점검(제출 전)

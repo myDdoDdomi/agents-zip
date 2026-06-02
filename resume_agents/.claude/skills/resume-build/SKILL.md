@@ -1,9 +1,9 @@
 ---
-name: resume
-description: 수집된 근거와 JD 정렬 기준으로 기업 맞춤 이력서 초안을 만듭니다. "이력서 작성", "이 회사용 이력서" 요청 시 사용. 사용법 /resume [지원 회사/직무 (근거가 없으면 먼저 수집)]
+name: resume-build
+description: 수집된 근거와 JD 정렬 기준으로 기업 맞춤 이력서 초안을 만듭니다. "이력서 작성", "이 회사용 이력서" 요청 시 사용. 사용법 /resume-build [지원 회사/직무 (근거가 없으면 먼저 수집)]
 ---
 
-# /resume — 기업 맞춤 이력서 작성
+# /resume-build — 기업 맞춤 이력서 작성
 
 `resume-lead`가 근거·정렬 기준을 정리해 `resume-writer`에게 이력서 초안을 맡깁니다.
 

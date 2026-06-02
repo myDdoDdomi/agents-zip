@@ -48,7 +48,7 @@
 | `/github-career` | github-career-extractor | GitHub 경력 근거 |
 | `/portfolio-analyze` | portfolio-analyzer | 포트폴리오 분석 |
 | `/company-research` | company-job-researcher | 기업·직무(JD) 분석 |
-| `/resume` | resume-lead→resume-writer | 기업 맞춤 이력서 |
+| `/resume-build` | resume-lead→resume-writer | 기업 맞춤 이력서 |
 | `/portfolio` | resume-lead→portfolio-writer | 기업 맞춤 포트폴리오 |
 | `/resume-review` | resume-reviewer | 검수 리포트(게이트) |
 | `/drive-sync` | docs-formatter | Docs 서식·Drive 저장 |

@@ -59,14 +59,15 @@
 ```
 ① 입력(Input)    → GitHub ID · 포트폴리오 URL · 지원 기업/직무(JD)
 ② 근거 수집(Gather) → [GitHub 경력 / 포트폴리오 / 기업·JD] 병렬 분석 (근거+출처)
-③ 작성(Write)    → 기업 맞춤 이력서 / 포트폴리오 초안 (JD 키워드 정렬·STAR 성과)
-④ 검수(Review)   → 사실 정합·기업 적합도·과장/금칙 게이트 (resume-reviewer)
-⑤ 반영(Sync)     → Google Docs 네이티브 서식 → Drive 저장·정리 (/drive-sync)
+③ 작성(Write)    → 기업 맞춤 이력서 / 포트폴리오 초안 → **평문 .md 파일로 먼저 산출** (JD 키워드 정렬·STAR 성과)
+④ 검수(Review)   → 사실 정합·기업 적합도·과장/금칙 게이트 (resume-reviewer) → 구조화된 검수 판정 블록 산출
+⑤ 반영(Sync)     → 검수 통과한 .md를 Google Docs로 반영 (마크다운 import로 새 Doc 생성 기본) (/drive-sync)
 ```
 
+- **작성본은 평문 `.md`가 단일 원본.** ③에서 만든 `.md`를 ④ 검수·⑤ 반영이 그대로 사용한다(재작성·재전달 금지).
 - 한 방에 끝내기: `/tailor` → (자동) 수집 → 작성 → 검수 → Drive 반영 오케스트레이션.
 - 근거만: `/github-career`, `/portfolio-analyze`, `/company-research`.
-- 작성만: `/resume`, `/portfolio`. 검수만: `/resume-review`. Drive만: `/drive-sync`.
+- 작성만: `/resume-build`, `/portfolio`. 검수만: `/resume-review`. Drive만: `/drive-sync`.
 
 ## 5. 팀 라우팅 가이드 (요청 → 담당 에이전트 / 스킬)
 
@@ -78,7 +79,7 @@
 | GitHub 경력 근거 추출 | `/github-career` | `github-career-extractor` | `templates/경력근거-GitHub.md` |
 | 포트폴리오 분석 | `/portfolio-analyze` | `portfolio-analyzer` | `templates/포트폴리오분석.md` |
 | 지원 기업·직무(JD) 분석 | `/company-research` | `company-job-researcher` | `templates/기업직무분석.md` |
-| 기업 맞춤 이력서 작성 | `/resume` | `resume-lead`→`resume-writer` | `templates/이력서.md` |
+| 기업 맞춤 이력서 작성 | `/resume-build` | `resume-lead`→`resume-writer` | `templates/이력서.md` |
 | 기업 맞춤 포트폴리오 문서 작성 | `/portfolio` | `resume-lead`→`portfolio-writer` | `templates/포트폴리오.md` |
 | (전 산출물) 사실·적합도·과장 검수 | `/resume-review` | `resume-reviewer` | `docs/REVIEW-CHECKLIST.md` |
 | (전 산출물) Docs 서식·Drive 반영 | `/drive-sync` | `docs-formatter` | `docs/DOC-FORMATTING.md` |
@@ -117,6 +118,13 @@ GitHub 경력 근거 ┐
   (Sheets/Slides/Calendar 미사용 → 권한 표면 최소화).
 - **서식은 반드시 `docs-formatter`에 위임.** plain text를 통째로 올리지 말고 `docs/DOC-FORMATTING.md`
   표준(커버 헤더·제목 스타일·네이티브 표·포인트색)을 적용합니다.
+- **반영 방식: 검수 통과한 `.md`를 마크다운 import로 새 Doc 생성(기본).** 외부 변환 공식 양식
+  (.docx→Docs)은 셀 직접 편집 대신 `.md` import로 새 Doc을 만든다. 소규모 수정은 부분 편집 우선,
+  구조 변경 시에만 전체 재import. 부득이 직접 편집 시 `inspect_doc_structure`로 **tab_id·병합셀 인덱스**를
+  확인한다. (→ `docs/DOC-FORMATTING.md` §0-A)
+- **상태 핸드오프(검수 판정 블록).** `resume-reviewer`가 산출한 **구조화된 검수 판정 블록**(✅/🔴 + 사유 +
+  반영 가능 여부)을 `docs-formatter`에 그대로 전달한다. ✅ 통과 블록이 있으면 formatter는 **재질문 없이
+  진행**한다(게이트 자체는 유지 — ✅는 실제 본문 대조 후에만 부여).
 - **쓰기 전 확인 (Human-in-the-loop).** 기존 문서를 **덮어쓰기 전 반드시** 현재 내용을 읽어 비교하고,
   손실 위험이 있으면 사용자에게 알린 뒤 진행합니다. 가능하면 "이어쓰기/섹션 교체"를 우선합니다.
 - **MCP 미연결 환경(폴백):** Drive 도구가 없으면 마크다운 초안을 산출물로 제공하고, 사용자가 복사해
