@@ -17,8 +17,12 @@
   (병합셀 많은 양식에서 셀 인덱스 삽입이 엉뚱한 라벨 셀로 들어가 표가 깨지는 사고를 피한다.)
 - import 후 §1 서식 규칙(제목 스타일·포인트색·표 헤더 등)을 네이티브로 보강한다.
 - ⚠️ **import 파일 경로 제약:** 이 MCP의 파일 입력(import) 도구는 보통 `~/.workspace-mcp/attachments`
-  **안의 파일만** 읽는다. 그 밖의 경로면 파일을 attachments로 복사하거나, **`content` 파라미터로
-  마크다운 텍스트를 직접 전달**하는 대안을 쓴다. (→ `docs/GOOGLE-WORKSPACE-MCP.md` FAQ)
+  (Windows: `C:\Users\info\.workspace-mcp\attachments\`) **안의 파일만** 읽고, 경로를 **`file://` URL**
+  형식으로 받는다(절대 OS 경로 `C:\...`는 거부될 수 있음). 그 밖의 경로면 파일을 attachments로 복사하거나,
+  **`content` 파라미터로 마크다운 텍스트를 직접 전달**하는 대안을 쓴다. (→ `docs/GOOGLE-WORKSPACE-MCP.md` FAQ)
+- ⚠️ **파일명 확장자 strip:** import 시 표시명(`file_name`)은 **마지막 점(.) 뒤가 확장자로 잘릴 수 있다**
+  (`OO회사_이력서_v1.2` → `v1`로 깨짐). → **점 없는 임시명**으로 import한 뒤 `update_drive_file(name="정식이름")`로
+  리네임한다(버전 표기에 점이 들어가는 이력서·포트폴리오 파일명에서 특히 주의).
 
 ### ② 소규모 수정: **부분 편집 우선**
 - 이미 만든 Doc에서 한 항목/한 칸만 바꾸는 정도면 전체 재import 대신

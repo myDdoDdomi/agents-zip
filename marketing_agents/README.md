@@ -20,7 +20,7 @@
 
 ---
 
-## 👥 팀 구성 (7 에이전트)
+## 👥 팀 구성 (8 에이전트)
 
 | 에이전트 | 역할 | model |
 |---|---|---|
@@ -31,8 +31,9 @@
 | [`seo-specialist`](.claude/agents/seo-specialist.md) | 키워드·SEO 브리프·온페이지 | sonnet |
 | [`social-media-strategist`](.claude/agents/social-media-strategist.md) | 소셜·숏폼 캘린더·스크립트 | sonnet |
 | [`brand-voice-reviewer`](.claude/agents/brand-voice-reviewer.md) | 브랜드 보이스·사실·규정 검수, read-only | opus |
+| [`feedback-reporter`](.claude/agents/feedback-reporter.md) | 팀 작업 회고→본부 피드백 보고서(read 중심) | sonnet |
 
-## 🧩 슬래시 스킬 (9)
+## 🧩 슬래시 스킬 (10)
 
 | 스킬 | 담당 | 산출물 |
 |---|---|---|
@@ -45,6 +46,7 @@
 | `/seo-brief` | seo-specialist | SEO 브리프 |
 | `/social-calendar` | social-media-strategist | 소셜 캘린더 |
 | `/copy-review` | brand-voice-reviewer | 브랜드·사실 검수 |
+| `/feedback-agents` | feedback-reporter | 팀 작업 회고·피드백 보고서(→ 본부) |
 
 ---
 
@@ -74,9 +76,10 @@
 marketing-agents/
 ├── CLAUDE.md            # 그룹장(오케스트레이터)
 ├── .claude/
-│   ├── agents/          # 마케팅 에이전트 7종
-│   └── skills/          # 슬래시 스킬 9종
+│   ├── agents/          # 마케팅 에이전트 8종
+│   └── skills/          # 슬래시 스킬 10종
 ├── templates/           # 산출물 템플릿 8종
+├── feedback/            # 팀 작업 회고·피드백 보고서 (→ 본부) /feedback-agents
 └── docs/                # 브랜드 보이스 · 워크플로우 · 채널 가이드
 ```
 

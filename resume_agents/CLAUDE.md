@@ -51,6 +51,13 @@
 - **중복 호출 금지.** 같은 프롬프트 2번 실행 금지. 새 Doc은 **생성 응답(실제 ID)을 받은 뒤** 그 ID로 순차 진행.
 - **출력은 표+핵심 불릿 중심.** 장문 서술은 요청 시만.
 - **확정 후 실행.** 대상 기업·직무·산출 형식이 모호하면 1~2개만 질문하고 실행.
+- **중간 산출물은 파일화 후 읽게 한다.** 작성본(`.md`)·근거·분석은 프롬프트로 통째로 재전송하지 말고
+  파일(또는 Drive)로 두고, 후속 에이전트(검수·서식)는 **파일을 읽게**(`get_drive_file_content`) 한다.
+- **동일 작업 연속은 새 spawn 대신 이어쓰기(SendMessage).** 같은 에이전트로 다음 단계를 이어갈 땐
+  매번 새로 spawn해 풀 브리프를 반복하지 말고 **같은 에이전트에 이어 메시지**로 컨텍스트를 재사용한다.
+- **"한 번에 올바르게" 원칙.** **산출 매체·형식을 먼저 확정**(이력서/포트폴리오, Docs 반영 방식)한 뒤
+  단일 산출한다. 중간본·임시 Drive 파일을 양산하지 않는다. 정리(휴지통)가 필요하면 **그룹장이 사용자 확인 후
+  일괄 정리**한다(자동 삭제 금지 — §2·Human-in-the-loop).
 
 ## 4. 표준 워크플로우 (맞춤화 루프)
 
@@ -83,6 +90,7 @@
 | 기업 맞춤 포트폴리오 문서 작성 | `/portfolio` | `resume-lead`→`portfolio-writer` | `templates/포트폴리오.md` |
 | (전 산출물) 사실·적합도·과장 검수 | `/resume-review` | `resume-reviewer` | `docs/REVIEW-CHECKLIST.md` |
 | (전 산출물) Docs 서식·Drive 반영 | `/drive-sync` | `docs-formatter` | `docs/DOC-FORMATTING.md` |
+| (회고) 팀 작업 피드백 보고 → 본부 | `/feedback-agents` | `feedback-reporter` | `feedback/` (날짜 파일) |
 
 > 보통의 흐름: **`resume-lead` 분해 → [github-career-extractor / portfolio-analyzer /
 > company-job-researcher] 병렬 근거 → resume-writer/portfolio-writer 맞춤 초안 →
@@ -157,8 +165,9 @@ resume_agents/
 ├── .gitignore
 ├── .mcp.json                 # Google Workspace(docs/drive) + GitHub 원격 MCP
 ├── .claude/
-│   ├── agents/               # 에이전트 8종 (자동 로드)
-│   └── skills/               # 슬래시 스킬 8종
+│   ├── agents/               # 에이전트 9종 (자동 로드)
+│   └── skills/               # 슬래시 스킬 9종
 ├── templates/                # 산출물 템플릿 5종
+├── feedback/                 # 팀 작업 회고·피드백 보고서(→ 본부) /feedback-agents
 └── docs/                     # 워크플로우 · 서식 · 검수 체크리스트 · MCP 가이드
 ```

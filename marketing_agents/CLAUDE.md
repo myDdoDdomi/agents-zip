@@ -65,6 +65,7 @@ SEO, 이메일, 포지셔닝·메시징)을 **시장·경쟁 리서치에 근거
 | SEO 브리프·온페이지 | `/seo-brief` | `seo-specialist` | `templates/SEO브리프.md` |
 | 소셜·숏폼 캘린더 | `/social-calendar` | `social-media-strategist` | `templates/소셜캘린더.md` |
 | (전 산출물) 브랜드 보이스·사실 검수 | `/copy-review` | `brand-voice-reviewer` | `docs/BRAND-VOICE.md` |
+| (회고) 팀 작업 피드백 보고 → 본부 | `/feedback-agents` | `feedback-reporter` | `feedback/` (날짜 파일) |
 
 > 보통의 흐름: **`marketing-lead` 전략·브리프 → `market-researcher` 근거 → SEO/콘텐츠/카피/소셜
 > 병렬 작성 → `brand-voice-reviewer` 검수 게이트 → 종합.** 독립 작업은 병렬로 위임한다.
@@ -94,8 +95,9 @@ marketing-agents/
 ├── CLAUDE.md                 # (이 파일) 그룹장(오케스트레이터)
 ├── README.md                 # 팀원용 빠른 시작 (직접 열기)
 ├── .claude/
-│   ├── agents/               # 마케팅 에이전트 7종 (자동 로드)
-│   └── skills/               # 슬래시 스킬 9종
+│   ├── agents/               # 마케팅 에이전트 8종 (자동 로드)
+│   └── skills/               # 슬래시 스킬 10종
 ├── templates/                # 산출물 템플릿 8종
+├── feedback/                 # 팀 작업 회고·피드백 보고서(→ 본부) /feedback-agents
 └── docs/                     # 브랜드 보이스 · 워크플로우 · 채널 가이드
 ```

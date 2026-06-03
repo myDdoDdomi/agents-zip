@@ -2,7 +2,7 @@
 
 소프트웨어 개발 조직을 그대로 옮긴 **Claude Code 서브에이전트(subagent) 모음**입니다.
 아키텍처 설계부터 구현, 코드리뷰, 디버그, 리팩터, 마이그레이션까지 — "만드는(BUILD)" 전 과정을
-**7명의 전문 개발 에이전트**로 구성했습니다.
+**8명의 전문 개발 에이전트**(작업 회고·본부 피드백 보고용 `feedback-reporter` 포함)로 구성했습니다.
 
 루트 [`CLAUDE.md`](CLAUDE.md)의 **개발 그룹장**과 [`dev-lead`](agents/dev-lead.md)가
 **오케스트레이터**로서 작업을 분배·통합하고, 테스트는 **QA_agents**, 문서는 **docs_agents**로
@@ -26,7 +26,7 @@
 
 ---
 
-## 👥 팀 구성 (7 에이전트)
+## 👥 팀 구성 (8 에이전트)
 
 | 에이전트 | 역할 | model |
 |---|---|---|
@@ -37,6 +37,7 @@
 | [`debugger`](agents/debugger.md) | 버그 재현·근본원인 분석·수정 | sonnet |
 | [`refactorer`](agents/refactorer.md) | 구조 개선·기술부채·성능 코드(동작 보존) | sonnet |
 | [`migration-engineer`](agents/migration-engineer.md) | DB/버전/IaC 마이그레이션(운영 MCP·승인 게이트) | opus |
+| [`feedback-reporter`](agents/feedback-reporter.md) | 팀 작업 회고 → 본부 피드백 보고(read 중심) | sonnet |
 
 ---
 
@@ -52,6 +53,13 @@ mkdir -p your-project/.claude/agents
 cp dev_agents/agents/*.md your-project/.claude/agents/
 ```
 
+`/feedback-agents` 스킬도 쓰려면 `skills/feedback-agents/`를 대상 프로젝트의 `.claude/skills/`로 복사합니다.
+
+```bash
+mkdir -p your-project/.claude/skills
+cp -r dev_agents/skills/feedback-agents your-project/.claude/skills/
+```
+
 ### 2) 개인 전역(global)
 모든 프로젝트에서 쓰려면 `~/.claude/agents/`(Windows: `%USERPROFILE%\.claude\agents\`)로 복사.
 
@@ -61,6 +69,10 @@ cp dev_agents/agents/*.md your-project/.claude/agents/
 > code-reviewer 로 이번 변경(diff)을 리뷰해줘
 ```
 > 💡 보통은 **`dev-lead`에게 먼저 맡기면** 계획·분해 후 적합한 에이전트에 분배합니다.
+
+> 🔁 **작업이 끝나면 회고:** `/feedback-agents`(또는 "feedback-reporter로 이번 개발 작업 회고해줘")로
+> 이 팀의 작업을 돌아보고, 본부(team-architect)에 전달할 `feedback.md`를 **대상 프로젝트의 `feedback/`**에
+> 산출합니다. best-effort 회고(git·세션·산출물 흔적 기반)이며, 본부가 dev 팀 정의·문서를 바로 개선하도록 업데이트 대상을 적습니다.
 
 ---
 

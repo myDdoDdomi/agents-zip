@@ -27,7 +27,7 @@
 
 ---
 
-## 👥 팀 구성 (8 에이전트)
+## 👥 팀 구성 (9 에이전트)
 
 | 에이전트 | 역할 | model |
 |---|---|---|
@@ -39,8 +39,9 @@
 | [`portfolio-writer`](.claude/agents/portfolio-writer.md) | 기업 맞춤 포트폴리오 문서(프로젝트 서사·임팩트) | sonnet |
 | [`resume-reviewer`](.claude/agents/resume-reviewer.md) | 검수 게이트: 사실·적합도·과장/금칙(read-only) | opus |
 | [`docs-formatter`](.claude/agents/docs-formatter.md) | Google Docs 서식 + Drive 저장·정리 | haiku |
+| [`feedback-reporter`](.claude/agents/feedback-reporter.md) | 팀 작업 회고→본부 피드백 보고서(read 중심, 개인정보 비전사) | sonnet |
 
-## 🧩 슬래시 스킬 (8)
+## 🧩 슬래시 스킬 (9)
 
 | 스킬 | 담당 | 산출물 |
 |---|---|---|
@@ -52,6 +53,7 @@
 | `/portfolio` | resume-lead→portfolio-writer | 기업 맞춤 포트폴리오 |
 | `/resume-review` | resume-reviewer | 검수 리포트(게이트) |
 | `/drive-sync` | docs-formatter | Docs 서식·Drive 저장 |
+| `/feedback-agents` | feedback-reporter | 팀 작업 회고·피드백 보고서(→ 본부) |
 
 ---
 
@@ -100,9 +102,10 @@ resume_agents/
 ├── .gitignore
 ├── .mcp.json           # Google Workspace(docs/drive) + GitHub 원격 MCP
 ├── .claude/
-│   ├── agents/         # 에이전트 8종 (자동 로드)
-│   └── skills/         # 슬래시 스킬 8종
+│   ├── agents/         # 에이전트 9종 (자동 로드)
+│   └── skills/         # 슬래시 스킬 9종
 ├── templates/          # 산출물 템플릿 5종
+├── feedback/           # 팀 작업 회고·피드백 보고서 (→ 본부) /feedback-agents
 └── docs/               # 워크플로우 · 서식 · 검수 체크리스트 · MCP 가이드
 ```
 

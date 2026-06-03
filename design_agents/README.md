@@ -21,7 +21,7 @@ Figma 공식 MCP를 자동 로드해 씁니다.
 
 ---
 
-## 👥 팀 구성 (6 에이전트)
+## 👥 팀 구성 (7 에이전트)
 
 | 에이전트 | 역할 | model |
 |---|---|---|
@@ -31,8 +31,9 @@ Figma 공식 MCP를 자동 로드해 씁니다.
 | [`figma-operator`](.claude/agents/figma-operator.md) | Figma 추출·생성·스크린샷 (공식 MCP) | sonnet |
 | [`accessibility-ux-reviewer`](.claude/agents/accessibility-ux-reviewer.md) | WCAG 접근성·UX 휴리스틱 검토(read-only) | opus |
 | [`code-connect-mapper`](.claude/agents/code-connect-mapper.md) | 디자인-코드 매핑(Code Connect)·drift 점검 | sonnet |
+| [`feedback-reporter`](.claude/agents/feedback-reporter.md) | 팀 작업 회고→본부 피드백 보고서(read 중심) | sonnet |
 
-## 🧩 슬래시 스킬 (7)
+## 🧩 슬래시 스킬 (8)
 
 | 스킬 | 담당 | 산출물 |
 |---|---|---|
@@ -43,6 +44,7 @@ Figma 공식 MCP를 자동 로드해 씁니다.
 | `/figma-sync` | figma-operator | Figma 추출/생성(쓰기=사람 승인) |
 | `/a11y-review` | accessibility-ux-reviewer | 접근성·UX 리포트 |
 | `/code-connect` | code-connect-mapper | Code Connect 매핑 |
+| `/feedback-agents` | feedback-reporter | 팀 작업 회고·피드백 보고서(→ 본부) |
 
 ---
 
@@ -69,9 +71,10 @@ design_agents/
 ├── CLAUDE.md            # 그룹장(오케스트레이터)
 ├── .mcp.json            # Figma 공식 MCP (비밀값 없음)
 ├── .claude/
-│   ├── agents/          # 디자인 에이전트 6종
-│   └── skills/          # 슬래시 스킬 7종
+│   ├── agents/          # 디자인 에이전트 7종
+│   └── skills/          # 슬래시 스킬 8종
 ├── templates/           # 디자인 산출물 템플릿 6종
+├── feedback/            # 팀 작업 회고·피드백 보고서 (→ 본부) /feedback-agents
 └── docs/                # Figma MCP · 워크플로우 · 디자인 원칙
 ```
 

@@ -92,8 +92,29 @@ export WORKSPACE_MCP_CREDENTIALS_DIR="$HOME/.google-mcp"
 | 401/403 권한 오류 | 폴더 미공유 / 계정 불일치 | 공유 폴더 Editor 권한 확인, `USER_GOOGLE_EMAIL` 확인 |
 | `access_denied` | 동의 화면 테스트 사용자 미등록 | OAuth 동의 화면에 본인 이메일 추가 |
 | 토큰 만료 반복 | 자격 디렉터리 권한 | `WORKSPACE_MCP_CREDENTIALS_DIR` 경로/권한 확인 |
+| Sheets 셀에 색·틀고정·드롭다운이 안 들어감 | **직접 서식 API 없음** | XLSX 빌드 후 import (§C-1·`DOC-FORMATTING.md §3-A`) |
+| `import_to_google_sheets`가 파일을 못 읽음 | 경로가 attachments 밖 / `file://` 누락 | attachments 디렉터리 + `file://` URL 사용 (§C-1) |
+| Drive 파일명이 `_v3`처럼 잘림 | **마지막 점 뒤 확장자 strip** | 점 없는 임시명으로 import → `update_drive_file(name=…)` 리네임 (§C-1) |
 
 ---
+
+## C-1. Sheets 서식의 실제 한계 + import 운영 함정 (실측 — 꼭 읽기)
+
+> 이 MCP의 Sheets 능력에는 **중요한 한계와 함정**이 있다. 모르면 동일 산출물을 여러 번 재생성하게 된다.
+> (상세 절차·예시 코드는 `docs/DOC-FORMATTING.md §3-A`.)
+
+1. **Sheets 셀 서식 직접 API 없음.** 이 서버는 Sheets에 대해 **`import_to_google_sheets`(값/시트 주입)와
+   값 읽기/쓰기**만 제공하고, **셀 배경색·정렬·줄바꿈·열너비·틀고정·다중 탭(시트)·데이터 유효성(드롭다운)·
+   조건부 서식을 직접 거는 API(batchUpdate/format)는 없다.** → **서식이 필요하면 `openpyxl`로 `.xlsx`를
+   빌드해 `import_to_google_sheets`로 올린다**(변환 시 위 서식·탭·드롭다운·조건부서식이 그대로 보존됨 — 실측).
+   "새 스프레드시트 생성 API가 없다"는 **틀린 단정**이다 — `import_to_google_sheets`가 곧 생성이다.
+
+2. **import 경로 제약.** `import_to_google_sheets`의 `file_path`는 **`C:\Users\info\.workspace-mcp\attachments\`
+   내부 파일만** 허용하고 **`file://` URL** 이어야 한다. **절대 Windows 경로(`C:\...`)는 거부된다.**
+   → 빌드한 `.xlsx`를 그 attachments 디렉터리에 저장하고 `file://C:/Users/info/.workspace-mcp/attachments/파일.xlsx`로 넘긴다.
+
+3. **파일명 확장자 strip.** `file_name`(Drive 표시명)은 **마지막 점(.) 뒤가 확장자로 잘린다**
+   (`동행AI_…_v3.1` → `v3`로 깨짐). → **점 없는 임시명**으로 import한 뒤 `update_drive_file(name="정식이름")`로 리네임한다.
 
 ## D. 대안 (선택)
 - **읽기 위주**면 Anthropic 레퍼런스 `@modelcontextprotocol/server-gdrive`(Node)도 가능하나

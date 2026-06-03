@@ -69,6 +69,7 @@
 | Figma 추출·생성·스크린샷 | `/figma-sync` | `figma-operator` | (Figma MCP, 쓰기=사람 승인) |
 | 접근성(WCAG)·UX 검토 | `/a11y-review` | `accessibility-ux-reviewer` | `templates/접근성리포트.md` |
 | 디자인-코드 정합성(Code Connect) | `/code-connect` | `code-connect-mapper` | `templates/CodeConnect매핑.md` |
+| (회고) 팀 작업 피드백 보고 → 본부 | `/feedback-agents` | `feedback-reporter` | `feedback/` (날짜 파일) |
 
 > 보통의 흐름: **`design-lead`로 전략 → ideation·design-system·a11y 병렬 → figma-operator 추출/생성(승인) → code-connect-mapper 정합 → design-lead 종합·게이트.**
 
@@ -105,8 +106,9 @@ design_agents/
 ├── .mcp.json                 # Figma 공식 MCP 팀 공유 설정 (비밀값 없음)
 ├── .gitignore
 ├── .claude/
-│   ├── agents/               # 디자인 에이전트 6종 (자동 로드)
-│   └── skills/               # 슬래시 스킬 7종
+│   ├── agents/               # 디자인 에이전트 7종 (자동 로드)
+│   └── skills/               # 슬래시 스킬 8종
 ├── templates/                # 디자인 산출물 템플릿
+├── feedback/                 # 팀 작업 회고·피드백 보고서(→ 본부) /feedback-agents
 └── docs/                     # 온보딩·워크플로우·Figma MCP·디자인 원칙
 ```

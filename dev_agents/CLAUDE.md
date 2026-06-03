@@ -53,6 +53,7 @@
 | 버그 재현·근본원인 분석·수정 | `debugger` |
 | 구조 개선·기술부채·성능 코드 개선 | `refactorer` |
 | DB 스키마/데이터/프레임워크 마이그레이션·IaC 변경 | `migration-engineer` |
+| (회고) 이 팀 작업을 회고해 본부에 피드백 보고 (`/feedback-agents`) | `feedback-reporter` |
 
 > 보통의 흐름: **`dev-lead` 계획 → `architect` 설계 → `implementer` 구현 → `code-reviewer` 리뷰
 > → (필요 시 `debugger`/`refactorer`/`migration-engineer`) → `dev-lead` 통합.**
@@ -107,8 +108,12 @@ dev_agents/
 ├── CLAUDE.md           ← (이 파일) 개발 그룹장 / 오케스트레이터
 ├── README.md           ← 설치(복사)·MCP·핸드오프 가이드
 ├── .mcp.json.example   ← GitHub+Context7 기본 + 옵션 MCP 예시
-└── agents/             ← 전문 개발 서브에이전트 7종
+├── agents/             ← 전문 개발 서브에이전트 8종 (회고용 feedback-reporter 포함)
+└── skills/             ← 슬래시 스킬 (feedback-agents — 대상 프로젝트 .claude/skills/로 복사)
 ```
 
 > 새 프로젝트에서 쓰려면 `agents/*.md`를 대상 프로젝트의 `.claude/agents/`로 복사한다.
 > 자세한 내용은 `README.md`.
+
+> **피드백 보고(`/feedback-agents`):** 작업이 끝나면 `feedback-reporter`로 회고해, 본부(team-architect)에
+> 전달할 `feedback.md`를 **대상 프로젝트의 `feedback/`**에 산출한다. 이 에이전트도 `agents/`에 포함돼 복사 시 함께 따라간다.

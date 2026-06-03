@@ -32,6 +32,7 @@
 | 기획서 | `/planning-doc` | 기획자 |
 | 요구사항 정의서 | `/requirements-doc` | 요구사항 분석가 |
 | 기능명세서 | `/functional-spec` | 명세 작성자 |
+| 기술명세서 | `/tech-spec` | 명세 작성자 |
 | 정보구조도(IA) | `/ia` | UX 설계자 |
 | 메뉴트리 | `/menu-tree` | UX 설계자 |
 | 유저 플로우차트 | `/user-flow` | UX 설계자 |
@@ -47,6 +48,7 @@
 | 일정계획(간트·칸반) | `/project-plan` | 프로젝트 일정 관리자(PM) |
 | (모든 문서) 검수·첨삭 | `/doc-review` | 검수자 |
 | (모든 문서) Drive 반영·서식 | `/drive-sync` | 서식 전문가 |
+| (회고) 팀 작업 피드백 보고 | `/feedback-agents` | 피드백 리포터 |
 
 > 빗금 명령을 몰라도 "회의록 만들어줘"처럼 **말로 시켜도** 됩니다.
 
@@ -86,6 +88,7 @@ docs-agents/
 │   └── skills/              # 문서종류별 빗금(/) 명령
 ├── templates/               # 한국어 문서 템플릿
 ├── examples/                # 범용 서식판 예시 (다른 팀 참고용)
+├── feedback/                # 팀 작업 회고·피드백 보고서 (→ 본부) /feedback-agents
 └── docs/                    # 사용 설명서 · 워크플로우 · 스타일 · 연결 가이드
 ```
 

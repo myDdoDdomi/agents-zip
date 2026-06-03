@@ -54,6 +54,7 @@
 | 엣지케이스 사냥, 자유 탐색 | `exploratory-tester` |
 | 변경 영향 분석, 회귀 검증 (변경/PR 시 항상) | `regression-test-engineer` |
 | 결함 정리, 심각도·우선순위, 중복 판정 | `bug-triager` |
+| (회고) 이 팀 작업을 회고해 본부에 피드백 보고 (`/feedback-agents`) | `feedback-reporter` |
 
 > 보통의 흐름: **`qa-lead`로 전략 수립 → 전문 에이전트 병렬 실행 → `bug-triager`로 결함 정리 → `qa-lead`로 종합·판정.**
 > 서로 독립적인 검증(API/성능/보안/접근성/모바일 등)은 병렬로 위임해 처리 속도를 높인다.
@@ -89,7 +90,11 @@
 QA_agents/
 ├── CLAUDE.md        ← (이 파일) QA 그룹장 / 오케스트레이터 지침
 ├── README.md        ← 팀 소개·설치·사용법
-└── agents/          ← 전문 QA 서브에이전트 12종
+├── agents/          ← 전문 QA 서브에이전트 13종 (회고용 feedback-reporter 포함)
+└── skills/          ← 슬래시 스킬 (feedback-agents — 대상 프로젝트 .claude/skills/로 복사)
 ```
 
 > 새 프로젝트에서 이 팀을 쓰려면 `agents/*.md`를 해당 프로젝트의 `.claude/agents/`로 복사한다. 자세한 내용은 `README.md` 참고.
+
+> **피드백 보고(`/feedback-agents`):** 작업이 끝나면 `feedback-reporter`로 회고해, 본부(team-architect)에
+> 전달할 `feedback.md`를 **대상 프로젝트의 `feedback/`**에 산출한다. 이 에이전트도 `agents/`에 포함돼 복사 시 함께 따라간다.

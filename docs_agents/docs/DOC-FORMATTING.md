@@ -83,6 +83,12 @@
 
 ## 3. Google Sheets 서식 규칙 (형식 — "무엇처럼 보여야 하나")
 
+> ⭐ **먼저 읽어라 — Sheets 서식의 진실(실측 확인):** 이 팀의 google-workspace MCP는 Sheets에
+> 대해 **`import_to_google_sheets`(값/시트 주입)만** 제공하고, **셀 배경색·정렬·줄바꿈·열너비·
+> 틀고정·다중 탭(시트)·데이터 유효성(드롭다운)·조건부 서식을 직접 거는 API(batchUpdate/format)는
+> 없다.** 따라서 **서식이 필요한 Sheets 산출물은 §3-A 절차(openpyxl로 .xlsx 빌드 → import)로 만든다.**
+> §3·§3-0의 "무엇처럼 보여야 하나"(형식 목표)는 그대로 유효하며, **그것을 실현하는 수단이 XLSX 빌드**다.
+
 - 헤더 행: 포인트색(`#1F3A5F`) 배경 + 흰색 굵은 글씨 + 가운데 정렬.
 - 헤더 1행(필요 시 1열) **틀 고정(freeze)**.
 - 목록형 시트는 헤더에 **자동필터**. 표 전체 옅은 테두리(`#D0D5DD`).
@@ -124,36 +130,148 @@
 
 ---
 
+## 3-A. ⭐ Sheets 서식 표준 절차 — openpyxl XLSX 빌드 → import (검증된 정석)
+
+> **핵심 사실(실측):** google-workspace MCP는 Sheets 셀 서식 API가 **없다.** 하지만 로컬에서
+> **openpyxl로 `.xlsx`를 빌드**해 그 안에 헤더색·정렬·줄바꿈·열너비·**틀고정·다중 탭·드롭다운·
+> 조건부서식**을 모두 넣은 뒤 **`import_to_google_sheets`로 업로드하면, 변환 시 이 서식·탭·드롭다운·
+> 조건부서식이 그대로 보존된다.** 즉 **서식 있는 Sheets = "XLSX로 만들어서 import"** 가 정석이다.
+> (Sheets에 직접 셀서식을 거는 우회를 시도하다 중단·낭비하지 말 것 — `doc-formatter` 정의 참조.)
+
+### 3-A-1. 절차 (5단계)
+1. **빌드**: 로컬에서 `openpyxl`로 `.xlsx`를 만든다. 시트(탭)·값·서식·드롭다운·조건부서식을 전부 코드로 지정.
+2. **임시 위치로 둔다**: 파일을 **`C:\Users\info\.workspace-mcp\attachments\`** 안에 저장한다(§3-A-3 경로 함정).
+   파일명은 **점(.)이 없는 임시명**으로 한다(예: `techspec_tmp` — §3-A-3 확장자 strip 함정).
+3. **import**: `import_to_google_sheets(file_path="file://C:/Users/info/.workspace-mcp/attachments/techspec_tmp.xlsx", source_format="xlsx", ...)`
+   — **`file://` URL** 로 넘긴다(절대 Windows 경로 `C:\...`는 거부됨). 이 호출로 **새 스프레드시트가 생성**된다.
+4. **리네임**: import 직후 `update_drive_file(file_id=<생성된 ID>, name="동행AI_기술명세서_v3.1")`로 최종 이름을 준다
+   (점 없는 임시명으로 import했으므로 여기서 정식 이름 부여).
+5. **폴더 이동**: 필요 시 `update_drive_file(add_parents=<대상폴더ID>, remove_parents="root")`로 지정 폴더에 넣는다.
+
+### 3-A-2. openpyxl 빌드 예시 (헤더 브랜드색·틀고정·다중 탭·드롭다운·조건부서식)
+
+```python
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.formatting.rule import FormulaRule
+from openpyxl.utils import get_column_letter
+
+NAVY   = "1F3A5F"   # 포인트(헤더 배경) — openpyxl은 '#' 없는 6자리 ARGB/RGB
+WHITE  = "FFFFFF"
+BORDER = "D0D5DD"
+RED    = "C0392B"   # 지연/위험
+ORANGE = "E67E22"   # 차단
+
+wb = Workbook()
+
+# ── 본문 시트(탭 1) ───────────────────────────────────────────
+ws = wb.active
+ws.title = "기술명세서"
+headers = ["ID","모듈","기능명","사용자가치","기술구현방식","기술비기능","처리흐름","예외","Phase","우선순위"]
+ws.append(headers)
+
+thin = Side(style="thin", color=BORDER)
+border = Border(left=thin, right=thin, top=thin, bottom=thin)
+
+# 헤더 서식: 네이비 배경 + 흰 굵은 글씨 + 가운데
+for col, _ in enumerate(headers, start=1):
+    c = ws.cell(row=1, column=col)
+    c.fill = PatternFill("solid", fgColor=NAVY)
+    c.font = Font(color=WHITE, bold=True)
+    c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    c.border = border
+
+# 데이터 행(예시) — 실제는 명세 행들을 append
+# ws.append([ "REQ-001","인증","로그인", ... ])
+
+# 본문 셀: 줄바꿈 + 상단 정렬 + 테두리
+for row in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=len(headers)):
+    for c in row:
+        c.alignment = Alignment(wrap_text=True, vertical="top",
+                                horizontal="center" if c.column_letter in ("I","J") else "left")
+        c.border = border
+
+# 열 너비(긴 텍스트 열은 넓게, 상태/우선순위는 좁게)
+widths = {"A":12,"B":14,"C":18,"D":28,"E":40,"F":28,"G":34,"H":28,"I":10,"J":12}
+for col, w in widths.items():
+    ws.column_dimensions[col].width = w
+
+# 틀고정: 헤더 1행(+1열까지면 "B2")
+ws.freeze_panes = "A2"
+
+# 자동필터(헤더 범위)
+ws.auto_filter.ref = f"A1:{get_column_letter(len(headers))}1"
+
+# 드롭다운(데이터 유효성): 우선순위(J), Phase(I)
+dv_pri = DataValidation(type="list", formula1='"P0,P1,P2,P3"', allow_blank=True)
+dv_pha = DataValidation(type="list", formula1='"MVP,Phase2,Phase3"', allow_blank=True)
+ws.add_data_validation(dv_pri); ws.add_data_validation(dv_pha)
+dv_pri.add(f"J2:J{ws.max_row}"); dv_pha.add(f"I2:I{ws.max_row}")
+
+# 조건부 서식: 우선순위=P0이면 빨강 글씨(FormulaRule)
+ws.conditional_formatting.add(
+    f"J2:J{ws.max_row}",
+    FormulaRule(formula=['$J2="P0"'], font=Font(color=RED, bold=True))
+)
+
+# ── 개요·부록 시트(탭 2) ──────────────────────────────────────
+ws2 = wb.create_sheet("개요·부록")
+ws2.append(["항목","값"])
+for c in ws2[1]:
+    c.fill = PatternFill("solid", fgColor=NAVY); c.font = Font(color=WHITE, bold=True)
+ws2.append(["문서종류","기술명세서"]); ws2.append(["버전","v3.1"])
+ws2.column_dimensions["A"].width = 16; ws2.column_dimensions["B"].width = 40
+
+wb.save(r"C:\Users\info\.workspace-mcp\attachments\techspec_tmp.xlsx")
+```
+
+> 위 빌드가 §3·§3-0의 가독성 목표(헤더 브랜드색·틀고정·줄바꿈+상단정렬·셀 잘림 방지·상태색)를
+> 실제로 달성한다. 색 토큰은 §0과 동일(단, openpyxl은 `#` 없는 6자리 HEX).
+
+### 3-A-3. import 운영 함정 2가지 (반드시 회피)
+1. **경로 제약**: `import_to_google_sheets`의 `file_path`는 **`C:\Users\info\.workspace-mcp\attachments\`
+   내부 파일만** 허용하고 **`file://` URL** 형식이어야 한다. 절대 Windows 경로(`C:\...`)는 **거부**된다.
+   → 빌드 결과물을 그 디렉터리에 저장하고 `file://.../파일.xlsx`로 넘긴다.
+2. **파일명 확장자 strip**: `file_name`(또는 Drive 표시명)은 **마지막 점(.) 뒤가 확장자로 잘린다**
+   (`동행AI_…_v3.1` → `v3`로 깨짐). → **점 없는 임시명**으로 import한 뒤 `update_drive_file(name="정식이름")`로 리네임한다.
+
+### 3-A-4. 폴백 (openpyxl/ import 불가 시)
+- openpyxl이 없거나 import 도구가 막히면 **거짓 도구명을 지어내지 말고**, ① 값(데이터)은 정확히 채우고
+  ② 적용 못 한 서식을 **명시**한 뒤 ③ 그룹장에 보고하고 대안(XLSX 수동 빌드 안내 등)을 제시한다. **임의 매체 우회(마크다운/Docs로 도피) 금지** — 그룹장 판단을 받는다.
+
+---
+
 ## 3-1. Sheets 도구 사용법 핵심 (이 MCP 기준 — 실전 작성법)
 
 > Docs의 §2에 상응하는 **Sheets 작성/수정 절차**. 사용 서버는 `workspace-mcp`
 > (taylorwilsdon/google_workspace_mcp). 아래는 **능력(capability) 단위**로 절차를 기술하고,
 > 정확한 도구명/파라미터가 검증되지 않은 부분은 `(확인 필요: …)`로 정직하게 표기한다.
 > **거짓 도구명을 단정하지 말 것.** 실제 호출 시 `/mcp`로 노출된 도구 목록에서 이름을 확인해 맞춘다.
+>
+> ⚠️ **서식이 필요하면 §3-A(XLSX 빌드 → import)가 정석이다.** 아래 §3-1은 **서식 없는 값 주입/읽기**
+> (예: 기존 시트의 값만 추가·갱신)와 셀범위·안전절차에 대한 보조 절차다. 이 MCP에는 **셀 서식 직접 API가
+> 없으므로**(헤더색·틀고정·드롭다운·조건부서식·줄바꿈은 §3-A로만 보장), 서식 산출물은 §3-A로 만든다.
 
 ### 3-1-A. Sheets 도구 능력 맵 (이름은 호출 전 `/mcp`로 확인)
 
-| 능력 | 합리적 도구명(추정) | 비고 |
+| 능력 | 도구 / 경로 | 비고 |
 |---|---|---|
-| 스프레드시트 목록/검색 | `list_spreadsheets` | Drive 검색으로 대체 가능 |
-| 새 스프레드시트 생성 | `create_spreadsheet`(`title`) | 생성 후 `spreadsheet_id` 확보 |
-| 스프레드시트 메타(시트 목록·범위) 조회 | `get_spreadsheet_info` | **(확인 필요: 정확한 도구명)** — 시트 탭 이름/행수 파악용 |
-| 시트(탭) 추가 | `create_sheet`(`spreadsheet_id`, `title`) | 문서정보/본문 시트 분리 시 |
-| 셀 값 **읽기** | `read_sheet_values`(`spreadsheet_id`, `range`) | range는 A1 표기(`시트명!A1:F100`) |
-| 셀 값 **쓰기/수정** | `modify_sheet_values`(`spreadsheet_id`, `range`, `values`) | `values`=2D 배열. 덮어쓰기 주의(아래 D) |
-| 서식(배경색·굵게·틀고정·필터·테두리) | **(확인 필요: 정확한 포맷 도구명/시그니처)** | 이 서버에 전용 포맷 도구가 노출되는지 호출 전 `/mcp`로 확인. 없으면 §3-1-E 폴백 |
-| **열 너비 자동맞춤/지정** | **(확인 필요: 정확한 도구명/시그니처)** | §3-0 가독성 마무리용. 헤더보다 좁지 않게, 긴 열은 상한 폭 |
-| **줄바꿈(wrap) + 행 높이 자동확장** | **(확인 필요: 정확한 도구명/시그니처)** | §3-0 핵심. **wrap과 행높이 자동확장은 세트로** 적용해야 잘림 방지 |
-| **정렬(세로 상단/가로 좌·중)** | **(확인 필요: 정확한 도구명/시그니처)** | 세로=top, 가로=텍스트 왼쪽·숫자/상태 가운데 |
+| **새 스프레드시트 생성 + 서식** | **XLSX 빌드 → `import_to_google_sheets`** (§3-A) | ⭐ **서식 있는 새 시트는 이 경로로 생성된다.** "생성 API 없다"는 **틀렸다** — import가 곧 생성 |
+| 스프레드시트 목록/검색 | `list_spreadsheets` / Drive 검색 | |
+| 셀 값 **읽기** | `read_sheet_values`(`spreadsheet_id`, `range`) | range는 A1 표기(`시트명!A1:F100`). 후속 에이전트가 콘텐츠를 받을 때 활용 |
+| 셀 값 **쓰기/수정**(서식 없음) | `modify_sheet_values`(`spreadsheet_id`, `range`, `values`) | `values`=2D 배열. **값만** 들어간다(셀 서식 못 검). 덮어쓰기 주의(아래 D) |
+| 서식(배경색·틀고정·필터·드롭다운·조건부서식·줄바꿈·열너비·정렬) | **직접 API 없음 → §3-A(XLSX 빌드 후 import)로만 보장** | 이 MCP에 셀 포맷 batchUpdate가 **없음**(실측). 직접 시도하다 중단·낭비 금지 |
+| 파일 리네임/폴더 이동 | `update_drive_file`(`name`, `add_parents`, `remove_parents`) | import 후 정식 이름 부여(§3-A-3)·폴더 이동 |
 
-> ⚠️ 위 표의 이름 중 `read_sheet_values`/`modify_sheet_values`/`create_spreadsheet`/`create_sheet`는
-> 이 서버에서 일반적으로 쓰이는 능력이나, **시그니처(파라미터명)가 100% 확정은 아니다.** 첫 호출 전
-> 반드시 노출 도구 목록으로 대조하고, 어긋나면 노출된 실제 이름을 따른다.
+> ⚠️ `read_sheet_values`/`modify_sheet_values`의 **시그니처(파라미터명)가 100% 확정은 아니다.** 첫 호출 전
+> 노출 도구 목록(`/mcp`)으로 대조하고, 어긋나면 노출된 실제 이름을 따른다.
+> **핵심:** 셀 서식이 필요하면 위 표의 "값 주입" 도구로 헤매지 말고 **§3-A(XLSX→import)** 로 직행한다.
 
 ### 3-1-B. 작성 절차 (순서 — Docs §2의 3단계에 대응)
 
-1. **생성/열기**: 새로 만들면 `create_spreadsheet(title)`로 빈 스프레드시트를 만들고 `spreadsheet_id`를 받는다.
-   기존 문서면 ID로 열고 먼저 §3-1-D(수정 안전절차)로 현재 구조를 읽는다.
+1. **생성/열기**: **새 서식 산출물은 §3-A(XLSX 빌드 → `import_to_google_sheets`)로 만든다**(이 경로가 새 시트를
+   생성한다). 기존 시트에 **값만** 추가/갱신하는 경우에만 ID로 열고 먼저 §3-1-D(수정 안전절차)로 현재 구조를 읽는다.
 2. **시트(탭) 구성**: 본문 시트 1개 + `문서정보` 시트 1개를 기본으로. 필요 시 `create_sheet`로 추가.
    첫 시트 이름은 문서 종류에 맞게(예: `요구사항`, `테스트케이스`).
 3. **헤더 행 작성**: 1행에 컬럼 헤더를 쓴다. range는 `시트명!A1:<마지막열>1`, `values=[[ "ID","구분",… ]]`.
@@ -161,7 +279,7 @@
 4. **데이터 행 입력**: **2행부터** 데이터를 쓴다. range는 `시트명!A2:<마지막열><N+1>` (N=항목 수).
    한 행 = 한 항목(요구사항/엔드포인트/테스트케이스 1건). 값은 2D 배열로 한 번에 보낸다(행별 분할 호출 지양).
 5. **서식 적용**: 헤더 배경(`#1F3A5F`)·헤더 글자(흰색 굵게)·틀고정(1행)·자동필터·상태색·옅은 테두리(`#D0D5DD`).
-   → 전용 포맷 도구가 있으면 그것으로, 불확실/부재면 §3-1-E 폴백.
+   → **이 MCP엔 셀 서식 직접 API가 없으므로 §3-A(XLSX 빌드 후 import)로 적용한다.** 값만 주입하는 경우 서식은 미적용임을 명시(§3-1-E).
 6. **메타정보 시트**: `문서정보` 시트에 문서종류/버전/작성자/작성일/상태/관련문서를 2열(키-값)로 기록.
 7. **⑥ 가독성 마무리 (필수 — 마지막 단계, 생략 금지)**: §3-0을 그대로 적용한다.
    **열 너비 자동맞춤(헤더보다 좁지 않게)** + **긴 텍스트 열 줄바꿈(wrap) ON + 행 높이 자동확장(세트)** +
@@ -207,12 +325,11 @@
 4. **헤더 행(1행)은 보존**한다. 데이터 갱신이 헤더를 덮지 않도록 range를 2행부터로 잡는다.
 5. 큰 변경 전에는 그룹장 원칙대로 **현재 내용을 1회 읽어 요약**하고, 손실 위험이 있으면 사용자에게 먼저 알린다(§CLAUDE.md 5).
 
-### 3-1-E. 서식 적용 폴백 (전용 포맷 도구가 불확실/부재일 때)
+### 3-1-E. 서식 적용 폴백 (XLSX 빌드/import가 불가할 때)
 
-- 이 서버에 **셀 서식(배경색·틀고정·필터)** 및 **§3-0 가독성 도구(열 너비·줄바꿈+행 높이·정렬)**가
-  노출되는지 호출 전 `/mcp`로 확인한다.
-- 노출되면 그 도구로 §3 형식 규칙 + §3-0 가독성 마무리를 적용한다. **(확인 필요: 포맷 도구의 정확한 이름/파라미터)**
-- 노출 안 되면: ① 값(데이터)은 정확히 채우고 ② 서식·가독성 마무리는 적용 못 함을 **명시**한 뒤
+- **1순위는 §3-A(openpyxl XLSX 빌드 → `import_to_google_sheets`)다.** 이 MCP엔 Sheets 셀 서식
+  직접 API가 없으므로, 헤더색·틀고정·드롭다운·조건부서식·줄바꿈은 §3-A로만 보장된다.
+- §3-A가 막힐 때(openpyxl 부재·import 도구 미노출 등)에만 아래 폴백: ① 값(데이터)은 정확히 채우고 ② 서식·가독성 마무리는 적용 못 함을 **명시**한 뒤
   ③ 사용자에게 "헤더 고정·색·필터 **및 열 너비 자동맞춤·긴 열 줄바꿈+행 높이 확장**을 시트에서 1회 수동 적용"을
   안내(또는 색 구분을 텍스트/이모지로 대체)한다. 거짓 포맷 도구명을 지어내 호출하지 않는다.
   > ⚠️ 특히 **"셀이 글보다 작아 잘려 보이는"** 문제를 막는 열너비·줄바꿈+행높이는 사용자에게 꼭 짚어 안내한다.
@@ -231,8 +348,9 @@
 - **칸반 컬럼.** 상태(대기/진행중/검수중/완료) 컬럼에 `FILTER`/`QUERY`로 `Tasks`를 읽어 자동 분류.
   카드에 작업명·담당자·검수자·기간. 데이터 영역 **셀 병합 금지**(필터·정렬 깨짐).
 - **단방향.** `Tasks`가 입력원, 간트·칸반은 읽어서 표시만. 상태는 `Tasks`에서 바꾼다.
-- 조건부서식·수식(FILTER/QUERY)·데이터유효성·틀고정의 **정확한 도구명/시그니처가 불확실하면**
-  `(확인 필요)` 표기 + §3-1-E 폴백(값·상태는 채우고 자동화는 사용자에게 수식 안내). 거짓 도구명 호출 금지.
+- **드롭다운(데이터유효성)·조건부서식·틀고정은 §3-A(XLSX 빌드)로 넣고 import한다**(MCP 직접 API 없음).
+  단 **수식(FILTER/QUERY)**은 XLSX에 그대로 담아 import하면 Sheets에서 재계산되므로 셀에 수식 문자열로 넣는다
+  (단방향 연동 유지). 정확한 동작이 불확실하면 `(확인 필요)` 표기 + §3-1-E 폴백. 거짓 도구명 호출 금지.
 
 ---
 
@@ -243,7 +361,9 @@
 - [ ] 표 헤더가 네이비 배경 + 흰 글씨인가
 - [ ] 핵심 결론이 강조 박스(연한 네이비틴트)로 보이는가
 
-**Sheets 산출물 (§3 / §3-1)**
+**Sheets 산출물 (§3-A / §3 / §3-1)**
+- [ ] **서식 산출물을 XLSX 빌드→`import_to_google_sheets`로 만들었는가**(§3-A) — 직접 셀서식 시도 아님
+- [ ] import를 **attachments + `file://`** 로 했고 **점 없는 임시명→`update_drive_file` 리네임**했는가(확장자 strip 회피, §3-A-3)
 - [ ] 헤더 1행이 네이비 배경(`#1F3A5F`) + 흰 굵은 글씨 + 가운데 정렬인가
 - [ ] 헤더 1행 **틀 고정(freeze)** 됐는가
 - [ ] **⭐ 셀 내용이 잘리지 않는가** — 열 너비 자동맞춤(헤더보다 좁지 않게) + 긴 열 **줄바꿈(wrap) + 행 높이 자동확장**을 **세트로** 적용했는가(§3-0)
