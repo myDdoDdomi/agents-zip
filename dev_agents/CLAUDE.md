@@ -32,11 +32,13 @@
 | 기능 구현·디버그·리팩터·마이그레이션(코드) | ● | — | — |
 | 코드리뷰(품질·버그·구조·코드레벨 보안 셀프) | ● | — | — |
 | 단위테스트 작성(구현에 딸린 셀프 수준) | ● | (전략·커버리지·자동화 프레임워크는 QA) | — |
-| 테스트 전략·E2E·자동화 스위트·성능/접근성/보안 *테스트* | → **QA 핸드오프** | ● | — |
+| 테스트 전략·E2E·자동화 스위트·성능/접근성 *테스트* | → **QA 핸드오프** | ● | — |
+| **인가된 침투 테스트(레드팀)·발견 방어(블루팀)** | ● (red→report→blue 루프) | (QA의 방어적 OWASP 보안*테스트*와 보완) | — |
 | 기획서·명세서·API명세·ERD·릴리즈노트 *문서화* | → **docs 핸드오프** | — | ● |
 
-> **한 줄 원칙:** dev는 **코드를 만들고 고친다**. *체계적 검증*은 QA, *문서 산출물*은 docs.
-> dev의 테스트/보안은 "개발자가 자기 코드에 대해 하는 셀프 수준"까지만.
+> **한 줄 원칙:** dev는 **코드를 만들고 고친다**(+ 인가된 레드팀 공격→방어 루프). *체계적 기능검증*은
+> QA, *문서 산출물*은 docs. dev의 코드리뷰 보안은 셀프 수준이되, **레드팀은 인가 자산 침투 테스트**를
+> 전담하고 그 발견을 **블루팀(remediation-lead)**이 방어한다(§레드팀·블루팀).
 
 ---
 
@@ -53,6 +55,14 @@
 | 버그 재현·근본원인 분석·수정 | `debugger` |
 | 구조 개선·기술부채·성능 코드 개선 | `refactorer` |
 | DB 스키마/데이터/프레임워크 마이그레이션·IaC 변경 | `migration-engineer` |
+| **인가된 침투 테스트(레드팀) 교전 시작·조율 (`/pentest`)** | `redteam-lead` |
+| 공격 표면 매핑·정찰(자산·엔드포인트·포트·기술스택) | `recon-mapper` |
+| 웹/API·OWASP Top 10·인증/세션/JWT/OAuth 테스트 | `webapp-api-pentester` |
+| 네트워크/인프라/클라우드 오설정·TLS·보안헤더·IaC 점검 | `infra-cloud-scanner` |
+| SAST·SCA(의존성 취약점)·하드코딩 시크릿(레포 정적분석) | `code-sca-auditor` |
+| 발견 PoC 검증·오탐 제거 (익스플로잇은 승인 후) | `exploit-verifier` |
+| 침투 테스트 리포트 컴파일·블루팀 핸드오프 | `redteam-reporter` |
+| **리포트 기반 방어(수정·패치) 총괄 (`/remediate`, 블루팀)** | `remediation-lead` |
 | (회고) 이 팀 작업을 회고해 본부에 피드백 보고 (`/feedback-agents`) | `feedback-reporter` |
 
 > 보통의 흐름: **`dev-lead` 계획 → `architect` 설계 → `implementer` 구현 → `code-reviewer` 리뷰
@@ -74,6 +84,51 @@
 - **MCP 의존 에이전트의 `tools`**: 동적 MCP 도구명을 허용목록에서 빠뜨리면 기능이 끊기므로,
   MCP를 쓰는 에이전트는 `tools`를 **생략(전체 상속)**한다. read-only 분석 전용 에이전트만 도구를
   좁히되, 그 경우 해당 에이전트에는 MCP를 붙이지 않는다(또는 README 안내대로 `tools` 줄 제거).
+
+---
+
+## 🔴🔵 레드팀(공격) · 블루팀(방어) — 퍼플팀 루프
+
+이 팀은 **인가된 침투 테스트**로 사용자 본인 소유/인가 자산을 공격해 발견을 산출하고, 그 리포트로
+**방어(수정·패치)**하는 퍼플팀 루프(**red → report → blue**)를 갖는다. 그룹장은 직접 공격하지 않고
+**인가 게이트·조율·핸드오프**를 판정한다.
+
+```
+/pentest → [redteam-lead] 인가·ROE 게이트 → 환경 탐지
+   ├─▶ [recon-mapper] 표면 매핑
+   ├─▶ [webapp-api-pentester] 웹/API/OWASP
+   ├─▶ [infra-cloud-scanner] 인프라/클라우드/IaC
+   ├─▶ [code-sca-auditor] SAST/SCA/시크릿(레포 read-only)
+   ├─▶ [exploit-verifier] PoC 검증·오탐 제거 (익스플로잇=승인 후)
+   ▼
+[redteam-reporter] 침투 테스트 리포트(안전 위치, 레포 커밋 금지)
+   ▼  /remediate
+[remediation-lead] 우선순위·수정안 → implementer/debugger/refactorer/migration-engineer → code-reviewer
+   ▼
+[exploit-verifier/redteam-lead] 재검증 → 루프 닫기  (운영 변경·머지는 사람 승인 / 체계적 보안테스트는 QA)
+```
+
+### ⚖️ 안전 정책 / 인가 게이트 / 법적 고지 (필수 — 모든 공격 에이전트에 박힘)
+
+> 이 레드팀은 **방어 목적의 인가된 보안 테스트** 도구다. **무단 침투·제3자 자산 공격은 불법이며
+> 금지**된다. **사용자 본인 소유이거나 명시적으로 인가받은 자산만** 대상으로 한다. 오용을 구조적으로
+> 막기 위해 아래 게이트를 모든 공격 에이전트 정의에 명문화했다.
+
+1. **인가·범위(ROE) 게이트 (가장 중요):** 어떤 능동 테스트(정찰 포함)도 시작 전, `redteam-lead`가
+   **소유/인가 확인 + 교전 규칙(ROE: in-scope·out-of-scope·환경·강도·금지사항) 합의**를 강제한다.
+   범위 밖·제3자·공유 클라우드 인프라 공격은 **거부**. 인가 미확인 시 **중단하고 그룹장에 보고**.
+2. **교전 깊이 — 비파괴 기본 + 익스플로잇은 승인 후:** 정찰·취약점 스캔·안전한 검증(PoC)은 자율.
+   **실제 익스플로잇·데이터 추출·파괴/DoS는 그룹장·사용자 명시 승인 후에만**(`exploit-verifier` 게이트).
+3. **프로덕션 안전:** 레이트리밋·서비스 중단 회피, 가능하면 staging/local 우선. **측면이동·범위 외
+   확산 금지.** 환경(prod/staging/local)을 탐지해 강도를 적응(프로덕션 저강도).
+4. **발견 정보 보안:** 발견된 비밀값·취약점 상세를 **레포에 커밋 금지**(`.gitignore`/`${ENV}`, 시크릿
+   마스킹). 리포트는 대상 프로젝트의 **안전 위치**(예: `security/`·`pentest-reports/`)에만 산출.
+5. **Human-in-the-loop:** 파괴적·외부영향 행위, 방어 측 PR 머지·운영 변경(의존성/스키마/IaC)은
+   사람 최종 승인 전제(루트 CLAUDE.md §3-6).
+
+> **권한 경계:** 만능 공격 에이전트 금지. 정찰/스캔/정적분석은 가능한 read-only(`code-sca-auditor`는
+> 레포 read-only), 능동 테스트가 필요한 역할만 `Bash`를 받되 정의 본문에 **인가 확인·비파괴 기본**
+> 가드를 박았다. 운영 영향 변경은 기존대로 `migration-engineer` 한 역할에만(승인 게이트).
 
 ---
 
@@ -106,10 +161,11 @@
 ```
 dev_agents/
 ├── CLAUDE.md           ← (이 파일) 개발 그룹장 / 오케스트레이터
-├── README.md           ← 설치(복사)·MCP·핸드오프 가이드
+├── README.md           ← 설치(복사)·MCP·핸드오프·퍼플팀 가이드
 ├── .mcp.json.example   ← GitHub+Context7 기본 + 옵션 MCP 예시
-├── agents/             ← 전문 개발 서브에이전트 8종 (회고용 feedback-reporter 포함)
-└── skills/             ← 슬래시 스킬 (feedback-agents — 대상 프로젝트 .claude/skills/로 복사)
+├── agents/             ← 서브에이전트 16종: 개발 7 + 레드팀 7 + 블루팀 1(remediation-lead) + 회고 1(feedback-reporter)
+├── skills/             ← 슬래시 스킬 3종 (pentest · remediate · feedback-agents — 대상 .claude/skills/로 복사)
+└── templates/          ← 침투테스트리포트.md (대상 프로젝트 안전 위치에 산출, 레포 커밋 금지)
 ```
 
 > 새 프로젝트에서 쓰려면 `agents/*.md`를 대상 프로젝트의 `.claude/agents/`로 복사한다.

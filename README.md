@@ -25,7 +25,7 @@
 | [`docs_agents`](docs_agents/) | 레퍼런스 리서치·인사이트 분석·기획·개발 문서 작성·검수·Google Drive/Sheets 반영·Calendar 일정·일정계획(간트·칸반) (16 에이전트 + 22 슬래시 스킬) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
 | [`QA_agents`](QA_agents/) | 테스트 전략·케이스 설계·자동화·API·성능·보안·접근성·모바일·회귀·트리아지 (13 에이전트) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
 | [`design_agents`](design_agents/) | 아이데이션·디자인 토큰/시스템·Figma 추출·접근성·디자인-코드 정합 (7 에이전트 + 8 스킬, Figma 공식 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
-| [`dev_agents`](dev_agents/) | 아키텍처·구현·코드리뷰·디버그·리팩터·마이그레이션 (8 에이전트, GitHub+Context7 MCP) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
+| [`dev_agents`](dev_agents/) | 아키텍처·구현·코드리뷰·디버그·리팩터·마이그레이션 + **인가된 침투 테스트(레드팀)→방어(블루팀) 퍼플팀 루프** (16 에이전트 + 3 스킬, GitHub+Context7 MCP) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
 | [`marketing_agents`](marketing_agents/) | 캠페인·블로그·랜딩카피·SEO·소셜·이메일·포지셔닝 작성·검수 (8 에이전트 + 10 스킬, 빌트인 웹검색) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
 | [`resume_agents`](resume_agents/) | GitHub 경력·포트폴리오·지원 기업(JD) 분석을 조합한 기업 맞춤 이력서·포트폴리오 작성·검수·Drive 산출 (9 에이전트 + 9 스킬, Google Workspace(docs/drive)+GitHub 원격 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
 
