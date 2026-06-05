@@ -52,6 +52,13 @@
    `feedback-reporter` 에이전트 + `feedback/` 폴더)을 기본으로 갖는다. `team-architect`는 새 팀을 만들 때 이 기능을
    **필수 산출물**로 함께 만든다(피드백 루프). 모델 B는 보고서가 *대상 프로젝트*의 `feedback/`에 산출돼 본부로 전달된다.
    자세한 표준은 `team-architect` §산출물 4.
+9. **2계층 메모리 기본 탑재.** 모든 팀은 **CLAUDE.md(사람이 쓰는 안정적 규칙·라우팅)** + **MEMORY.md(작업하며 쌓이는
+   학습 — 검증된 함정·우회법·환경 매핑·반복 교정)** 2계층을 갖는다. 그룹장 CLAUDE.md가 끝에서 `@./MEMORY.md`로 매 세션
+   자동 로드한다(레포에 커밋되는 *팀 공유 학습층*). MEMORY.md는 200줄 이하 유지(초과분은 `memory/<주제>.md`로 분리),
+   비밀값 금지, CLAUDE.md와 모순 금지. `/feedback-agents` 회고의 *즉시 재사용 가능한* 학습은 MEMORY.md에도 반영한다.
+   `team-architect`는 새 팀에 이를 **필수 산출물**로 만든다. 자세한 표준은 `team-architect` §산출물 5.
+   > (참고) Claude Code **자동 메모리**(`~/.claude/projects/.../memory/`)는 머신 로컬·비커밋이라 팀 공유엔 부적합 →
+   > 공유 학습층은 커밋되는 MEMORY.md + `@import`가 표준.
 
 ## 4. 효율 운영 수칙 (품질·토큰 균형)
 
@@ -75,6 +82,7 @@
 | `resume_agents` | A. 자기완결형 | GitHub 경력·포트폴리오·지원 기업(JD) 분석을 조합한 기업 맞춤 이력서·포트폴리오 작성·검수·Drive 산출 (9 에이전트 + 9 스킬, Google Workspace(docs/drive)+GitHub 원격 MCP) | `resume_agents/CLAUDE.md` | 폴더를 Claude Code로 **직접 연다** |
 
 > 모든 팀은 `/feedback-agents`(작업 회고→본부 피드백 보고) 기능을 기본 탑재한다(§3-8). 위 카운트에 포함됨.
+> 모든 팀은 **2계층 메모리**(`CLAUDE.md` 안정 규칙 + `MEMORY.md` 누적 학습, `@./MEMORY.md` 자동 로드)를 기본 탑재한다(§3-9).
 > 새 팀이 생기면 `team-architect`가 이 표에 한 줄 추가한다.
 > **배포 모델 A**=자기 산출물을 만드는 팀(직접 열기). **B**=기존 코드베이스 위에서 일하는 팀(복사). (상세: `team-architect`)
 
@@ -95,6 +103,7 @@ team-agents/                          # (이 레포) 부서 에이전트 팀 본
 ├── marketing_agents/                 # [부서 팀] 마케팅 (모델 A)
 └── resume_agents/                    # [부서 팀] 이력서·포트폴리오 (모델 A)
 ```
+> 각 팀 폴더는 `CLAUDE.md`(그룹장) 옆에 `MEMORY.md`(학습 누적층)를 두고, `CLAUDE.md`가 `@./MEMORY.md`로 자동 로드한다(§3-9).
 
 ## 7. 새 팀을 만들 때 (요약 절차)
 
