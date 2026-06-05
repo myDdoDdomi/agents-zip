@@ -3,7 +3,11 @@
 > 우리 팀의 **AI 문서화 팀**. Claude Code로 기획·개발 문서를 표준 형식에 맞춰
 > 작성하고, 검토받고, Google Drive에 정리합니다. **개발 지식이 없어도 쓸 수 있습니다.**
 
-`garrytan/gstack` 스타일의 체계화된 에이전트 팀 구조를 문서 워크플로우에 맞게 구성했습니다.
+`garrytan/gstack`(Claude Code를 가상 엔지니어링 팀으로 만드는 스킬 툴킷)의 검증된 아이디어
+3가지를 문서팀 맥락으로 이식했습니다: **① 요구 인터뷰**(`/office-hours` — 착수 전 포싱 질문으로
+요구·갭·가정·성공기준 확정), **② Diátaxis 문서 분류**(튜토리얼/하우투/레퍼런스/설명 4분면으로
+문서 성격을 먼저 정함 → `docs/DIATAXIS.md`), **③ 다관점 심화 검수**(`/deep-review` — 중요 문서를
+5개 렌즈로 병렬 검수 후 1개 판정으로 종합).
 
 > 🟢 **처음이세요? → [비개발자용 사용 설명서](docs/GETTING-STARTED.md) 부터 보세요.**
 
@@ -27,6 +31,7 @@
 
 | 문서 | 빗금 명령 | 담당 |
 |---|---|---|
+| (착수 전) 요구 인터뷰 | `/office-hours` | 인테이크 인터뷰어 |
 | 레퍼런스 리서치 | `/reference-research` | 제품 리서처 |
 | 인사이트 분석 | `/insight-analysis` | 인사이트 분석가 |
 | 기획서 | `/planning-doc` | 기획자 |
@@ -47,6 +52,7 @@
 | 일정(캘린더) | `/calendar` | 일정 관리자 |
 | 일정계획(간트·칸반) | `/project-plan` | 프로젝트 일정 관리자(PM) |
 | (모든 문서) 검수·첨삭 | `/doc-review` | 검수자 |
+| (중요 문서) 다관점 심화 검수 | `/deep-review` | 검수자(+다관점 렌즈) |
 | (모든 문서) Drive 반영·서식 | `/drive-sync` | 서식 전문가 |
 | (회고) 팀 작업 피드백 보고 | `/feedback-agents` | 피드백 리포터 |
 
@@ -100,6 +106,7 @@ docs-agents/
 - [Google Drive 연결 가이드](docs/GOOGLE-DRIVE-MCP.md)
 - [작업 워크플로우](docs/WORKFLOW.md)
 - [한국어 문서 스타일 가이드](docs/STYLE-GUIDE.md)
+- [Diátaxis 문서 분류 프레임워크](docs/DIATAXIS.md)
 - [Drive 서식 표준](docs/DOC-FORMATTING.md)
 
 ---
