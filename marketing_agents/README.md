@@ -1,72 +1,118 @@
 # marketing-agents 📣
 
-> 제품·서비스의 **대외 마케팅 콘텐츠와 캠페인**(블로그·랜딩카피·소셜·SEO·이메일·포지셔닝)을
-> 시장 리서치에 근거해 **기획·작성·검수**하는 7명의 전문 에이전트 팀입니다.
-
-이 팀은 **모델 A(자기완결형)** — 이 폴더를 Claude Code로 **직접 열어** 슬래시 스킬과 템플릿을
-자동 로드해 씁니다. 외부 MCP 없이 빌트인 웹 검색만으로 동작합니다.
+> 블로그·랜딩 카피·소셜·SEO·이메일·캠페인·포지셔닝까지, **마케팅 콘텐츠를 시장 리서치에 근거해 기획·작성·검수**해 주는 AI 마케팅 팀입니다.
+> 개발 지식이 없어도 됩니다. 이 폴더를 열고 한국어로 시키기만 하면 됩니다. (인터넷 검색이 내장돼 있어 따로 연결할 것도 없어요.)
 
 ---
 
-## 🚀 빠른 시작
+## 🟢 Claude Code 처음이세요? — 설치 1분
 
-1. **이 폴더를 Claude Code로 엽니다.**
-2. (1회) `docs/BRAND-VOICE.md`에 브랜드 보이스·톤·금칙어를 채웁니다.
-3. 한국어로 시킵니다. 빗금(`/`)으로 스킬을 고를 수 있습니다.
-   ```
-   신제품 런칭 캠페인 브리프 만들어줘
-   ```
-   → 브리프 → 리서치 → 콘텐츠/카피/SEO/소셜 작성 → 검수 순으로 진행합니다.
+터미널(명령을 입력하는 검은 창)을 열고 **자기 컴퓨터에 맞는 아래 한 줄을 복사 → 붙여넣기 → Enter** 하면 끝납니다.
 
----
+**🍎 macOS** — `Terminal(터미널)` 앱 실행 후:
 
-## 👥 팀 구성 (8 에이전트)
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
 
-| 에이전트 | 역할 | model |
-|---|---|---|
-| [`marketing-lead`](.claude/agents/marketing-lead.md) | 전략·캠페인·포지셔닝·라우팅·게이트(오케스트레이터) | opus |
-| [`market-researcher`](.claude/agents/market-researcher.md) | 시장·경쟁·오디언스 리서치(근거), read-only | opus |
-| [`content-writer`](.claude/agents/content-writer.md) | 블로그·롱폼 콘텐츠 | sonnet |
-| [`copywriter`](.claude/agents/copywriter.md) | 랜딩·광고·이메일 카피 (+EN 옵션) | sonnet |
-| [`seo-specialist`](.claude/agents/seo-specialist.md) | 키워드·SEO 브리프·온페이지 | sonnet |
-| [`social-media-strategist`](.claude/agents/social-media-strategist.md) | 소셜·숏폼 캘린더·스크립트 | sonnet |
-| [`brand-voice-reviewer`](.claude/agents/brand-voice-reviewer.md) | 브랜드 보이스·사실·규정 검수, read-only | opus |
-| [`feedback-reporter`](.claude/agents/feedback-reporter.md) | 팀 작업 회고→본부 피드백 보고서(read 중심) | sonnet |
+**🪟 Windows** — 시작 메뉴에서 `PowerShell` 검색해 실행 후:
 
-## 🧩 슬래시 스킬 (10)
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
 
-| 스킬 | 담당 | 산출물 |
-|---|---|---|
-| `/campaign-brief` | marketing-lead | 캠페인 브리프 |
-| `/positioning` | marketing-lead | 포지셔닝·메시징 |
-| `/market-research` | market-researcher | 시장 리서치 |
-| `/blog-post` | content-writer | 블로그·롱폼 |
-| `/landing-copy` | copywriter | 랜딩·광고 카피 |
-| `/email-sequence` | copywriter | 이메일 시퀀스 |
-| `/seo-brief` | seo-specialist | SEO 브리프 |
-| `/social-calendar` | social-media-strategist | 소셜 캘린더 |
-| `/copy-review` | brand-voice-reviewer | 브랜드·사실 검수 |
-| `/feedback-agents` | feedback-reporter | 팀 작업 회고·피드백 보고서(→ 본부) |
+설치가 끝나면 같은 창에 **`claude`** 라고 입력하고 Enter 하세요. 처음 한 번만 **브라우저가 열려 로그인**(Claude Pro/Max/Team 또는 Console 계정)하면 되고, 그다음부터는 `claude`만 치면 바로 시작됩니다.
+
+> 막히면 공식 설치 가이드: <https://code.claude.com/docs/en/quickstart> · Windows는 `Git for Windows`가 깔려 있으면 더 매끄럽습니다.
 
 ---
 
-## 🚧 다른 팀과의 경계 (핸드오프)
+## 🚀 이 팀 쓰는 법 (2단계)
 
-| 필요 | 핸드오프 |
+**① 이 폴더를 `claude`로 엽니다.**
+이 `marketing_agents` 폴더 안에서 터미널을 열고 `claude` 라고 입력하세요. 그러면 마케팅 팀원들과 단축 명령이 자동으로 준비됩니다.
+
+**② 한국어로 시킵니다.**
+하고 싶은 일을 그냥 한국어로 말하면 됩니다. 예를 들어:
+
+```
+신제품 런칭 캠페인 브리프 만들어줘
+```
+
+→ 알아서 브리프 → 리서치 → 콘텐츠/카피/SEO/소셜 작성 → 검수 순으로 진행합니다.
+
+**외부 연결이나 추가 설정이 필요 없습니다.** 시장·경쟁사 조사에 쓰는 웹 검색 기능이 이미 들어 있어서, 폴더를 열면 바로 쓸 수 있어요.
+
+---
+
+## 🤖 "에이전트"와 "스킬"이 뭐예요? (1분 개념)
+
+어렵지 않아요. 딱 두 가지만 알면 됩니다.
+
+- **에이전트(agents) = AI 팀원.** 각자 한 분야 전문가예요. 당신이 한국어로 시키면 **그룹장이 알맞은 팀원에게 알아서 맡깁니다.** → *팀원 이름을 외울 필요가 없어요.*
+- **스킬(skills) = `/`로 시작하는 단축 명령.** 그냥 말로 시켜도 되고, 콕 집어 부를 수도 있어요. 입력창에 **`/`만 쳐도 쓸 수 있는 명령 목록**이 뜹니다.
+
+**결론: 외울 건 없습니다. 그냥 한국어로 하고 싶은 걸 말하세요.** 아래 표는 "이 팀이 뭘 해줄 수 있는지" 참고용이에요.
+
+---
+
+## 👥 이 팀의 팀원(agents)
+
+| 팀원 | 무엇을 해주나요 |
 |---|---|
-| 배너·키비주얼·디자인 시스템 등 **비주얼 제작** | `design_agents` |
-| 메타태그·스키마·속도 등 **기술 SEO 구현** | `dev_agents` |
+| `marketing-lead` (그룹장) | 캠페인 전략·포지셔닝을 짜고, 당신의 요청을 알맞은 팀원에게 나눠 맡기고, 품질을 최종 점검합니다 |
+| `market-researcher` | 시장·경쟁사·고객(오디언스)을 조사해 근거를 만듭니다 |
+| `content-writer` | 블로그·롱폼 같은 긴 글 콘텐츠를 씁니다 |
+| `copywriter` | 랜딩페이지·광고·이메일 문구를 씁니다 (요청 시 영문도) |
+| `seo-specialist` | 검색에 잘 노출되도록 키워드·SEO 브리프를 만듭니다 |
+| `social-media-strategist` | 소셜·숏폼 콘텐츠 캘린더와 게시글·스크립트를 만듭니다 |
+| `brand-voice-reviewer` | 만든 글이 브랜드 톤에 맞는지, 사실·규정에 어긋나지 않는지 검수합니다 |
+| `feedback-reporter` | 작업을 회고해 본부(team-agents)에 전달할 개선 피드백을 정리합니다 |
+
+> 이름을 외울 필요는 없어요. 그냥 시키면 그룹장이 알아서 위 팀원에게 배분합니다.
+
+---
+
+## ⌨️ 자주 쓰는 단축 명령(skills)
+
+`/`로 시작하는 명령이에요. 입력창에 `/`만 쳐도 목록이 뜹니다. 물론 아래 "이렇게 말하면 돼요"처럼 평범하게 말해도 똑같이 동작합니다.
+
+| 명령 | 이렇게 말하면 돼요 |
+|---|---|
+| `/campaign-brief` | "신제품 런칭 캠페인 브리프 만들어줘" |
+| `/positioning` | "우리 제품 포지셔닝이랑 핵심 메시지 정리해줘" |
+| `/market-research` | "이 시장이랑 경쟁사 조사해줘" |
+| `/blog-post` | "이 주제로 블로그 글 하나 써줘" |
+| `/landing-copy` | "랜딩페이지 헤드라인이랑 카피 써줘" |
+| `/email-sequence` | "신규 가입자 온보딩 이메일 시리즈 만들어줘" |
+| `/seo-brief` | "이 키워드로 SEO 콘텐츠 브리프 만들어줘" |
+| `/social-calendar` | "다음 달 인스타 콘텐츠 캘린더 짜줘" |
+| `/copy-review` | "이 카피 브랜드 톤이랑 사실관계 검수해줘" |
+| `/market-research` | "경쟁사 메시지 어떻게 잡는지 조사해줘" |
+| `/feedback-agents` | "이번 작업 회고해서 본부에 피드백 정리해줘" |
+
+---
+
+## 💬 이렇게 말해보세요 (예시)
+
+- "신제품 런칭 캠페인 브리프 만들어줘. 타깃은 20대 직장인이야."
+- "이 제품으로 블로그 글이랑 랜딩 카피 같이 써주고, 브랜드 톤 검수까지 해줘."
+- "'무료 가계부 앱' 키워드로 SEO 브리프랑 블로그 글 만들어줘."
+- "다음 달 소셜 콘텐츠 캘린더 짜고 게시글 초안까지 뽑아줘."
+
+> 처음 쓸 때 한 번, `docs/BRAND-VOICE.md` 파일에 브랜드 톤·말투·쓰면 안 되는 단어를 채워두면 모든 글이 그 기준에 맞춰 나옵니다. (선택 사항이지만 추천해요.)
+
+---
+
+## 🚧 이 팀이 안 하는 것 (다른 팀으로 넘김)
+
+| 필요한 일 | 넘기는 팀 |
+|---|---|
+| 배너·키비주얼·디자인 시스템 등 **실제 비주얼 제작** | `design_agents` |
+| 메타태그·속도 등 **기술 SEO 구현(코드)** | `dev_agents` |
 | 기획서·기능명세 등 **제품/개발 문서** | `docs_agents` |
 
-> 마케팅은 *말(컨셉·카피·메시지)*을 만들고, *비주얼·코드·제품문서*는 해당 팀으로 넘깁니다.
-
----
-
-## 🧭 원칙 (요약)
-- **한국어 기본**(랜딩·이메일·소셜은 요청 시 **영문 병행**).
-- **브랜드 보이스 절대 기준**(`docs/BRAND-VOICE.md`), **과장·허위·미검증 효능 금지**.
-- 모든 산출물은 `brand-voice-reviewer` **검수 게이트**.
-- **외부 발행·광고 집행은 사람 승인**(이 팀은 콘텐츠를 만들고, 게시는 사람이).
+> 마케팅 팀은 *말(컨셉·카피·메시지)*을 만들고, *비주얼·코드·제품문서*는 위 팀들이 맡습니다.
 
 ---
 
@@ -86,7 +132,11 @@ marketing-agents/
 ---
 🤖 Built with [Claude Code](https://claude.com/claude-code)
 
-## 🧠 팀 메모리 (MEMORY.md) 사용법
+---
+
+## 🛠 고급(개발자용)
+
+### 🧠 팀 메모리 (MEMORY.md) 사용법
 
 이 팀은 두 층의 메모리를 쓴다.
 - **CLAUDE.md** — 사람이 쓰는 안정적 규칙·라우팅(매 세션 전체 로드).
@@ -99,3 +149,12 @@ marketing-agents/
 | **확인** | 세션 중 `/memory`로 로드된 메모리 파일 확인 |
 | **용량** | 200줄 이하 유지. 초과 시 `memory/<주제>.md`로 분리(필요할 때만 읽힘) |
 | **개인 메모리** | 개인·머신 한정 학습은 Claude Code 자동 메모리(`~/.claude/projects/.../memory/`)가 별도 관리(레포 비커밋). 팀 공유 학습은 MEMORY.md |
+
+### 🧩 모델·프롬프트 기준 (Claude Opus 4.8)
+
+이 팀은 현행 **Claude Opus 4.8**(별칭 `opus`, 1M 컨텍스트) 기준으로 운영한다. 라인업·근거·전체 표는 루트 `claude-opus-4.8-운영노트.md`.
+
+- **모델 별칭 유지.** 에이전트 `model:`은 `opus`/`sonnet`/`haiku`/`inherit` 별칭으로 둔다(모델 ID 하드코딩 금지 — Claude Code가 현행 버전으로 해석). 4.8는 천장이 높아 **effort는 `high`에서 시작**, 필요 시 상향(반사적 `max` 금지).
+- **담백한 지시.** 4.8는 지시를 문자 그대로 따른다 → "CRITICAL/반드시/무조건" 같은 과장 명령은 과잉발동을 부르니 "…할 때 X" 형태로.
+- **위임·도구·메모리는 트리거 명시.** 4.8는 위임/웹검색/메모리를 보수적으로 쓴다 → `description`과 도구 설명에 **"~할 때 호출"** 을 박고(시장·경쟁 조사 시 웹검색 트리거 명시), 그룹장 루프에 "작업 전 MEMORY 확인"을 둔다.
+- **ask-rate·나레이션 보정.** 사소한 선택은 정하고 기록만(범위 변경·외부 발행만 확인). 도구 호출 사이 불필요한 나레이션은 줄인다. 4.8는 문체가 따뜻해졌으니 브랜드 보이스 지시는 재검토.

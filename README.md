@@ -10,6 +10,33 @@
 
 ---
 
+## 🟢 Claude Code 처음이세요? — 설치 1분
+
+이 팀들은 **Claude Code**(터미널에서 도는 AI 도구) 위에서 동작합니다. 처음이면 아래 한 줄만 따라 하세요.
+
+터미널(명령을 입력하는 검은 창)을 열고 **자기 컴퓨터에 맞는 아래 한 줄을 복사 → 붙여넣기 → Enter** 하면 끝납니다.
+
+**🍎 macOS** — `Terminal(터미널)` 앱 실행 후:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**🪟 Windows** — 시작 메뉴에서 `PowerShell` 검색해 실행 후:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+설치가 끝나면 같은 창에 **`claude`** 라고 입력하고 Enter → 처음 한 번만 **브라우저로 로그인**(Claude Pro/Max/Team 또는 Console 계정)하면 됩니다. 그다음부터는 `claude`만 치면 바로 시작.
+
+> 막히면 공식 설치 가이드: <https://code.claude.com/docs/en/quickstart> · Windows는 `Git for Windows`가 깔려 있으면 더 매끄럽습니다.
+
+**그다음은?** 위 표의 팀 폴더를 골라 그 폴더의 `README.md`를 보세요 — 비개발자용 사용법(에이전트·스킬 소개 포함)이 들어 있습니다.
+> 한 줄 개념: **에이전트 = AI 팀원**(시키면 그룹장이 알맞은 팀원에게 맡김) · **스킬 = `/`로 시작하는 단축 명령**(입력창에 `/`만 쳐도 목록이 뜸). **외울 것 없이 한국어로 말하면 됩니다.**
+
+---
+
 ## 🧭 구조 (2단 계층)
 
 - **루트 [`CLAUDE.md`](CLAUDE.md) = 총괄 그룹장** — 새 팀을 *만들고*, 일을 알맞은 팀으로 *라우팅*.

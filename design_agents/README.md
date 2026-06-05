@@ -1,50 +1,99 @@
 # design-agents 🎨
 
-> 제품 디자인의 **아이데이션 → 디자인 시스템(토큰) → Figma 추출 → 접근성·UX 검토 →
-> 디자인-코드 정합(Code Connect)** 까지를 6명의 전문 에이전트로 구성한 디자인 팀입니다.
-> "잘 만드는 단계"와 "나중에 틀어지지 않게 묶는 단계"를 분리해 운영합니다.
-
-이 팀은 **모델 A(자기완결형)** — 이 폴더를 Claude Code로 **직접 열어** 슬래시 스킬과
-Figma 공식 MCP를 자동 로드해 씁니다.
+화면 디자인을 처음부터 끝까지 도와주는 **AI 디자인 팀**입니다. 컨셉 잡기부터 색·폰트 정리, Figma에서 화면 읽어오기, 접근성(누구나 쓰기 쉬운지) 검토, 디자인과 실제 코드가 어긋나지 않게 맞추기까지 한 번에 처리합니다.
 
 ---
 
-## 🚀 빠른 시작
+## 🟢 Claude Code 처음이세요? — 설치 1분
 
-1. **이 폴더를 Claude Code로 엽니다.**
-2. **Figma를 1회 연결**합니다(브라우저 OAuth). → [Figma 연동 가이드](docs/FIGMA-MCP.md)
-3. 한국어로 시킵니다. 빗금(`/`)으로 스킬을 고를 수 있습니다.
-   ```
-   온보딩 화면 디자인 컨셉 잡아줘
-   ```
-   → 컨셉 → 프로토타입 → 토큰/시스템 → 접근성 검토 → 코드 정합 순으로 진행합니다.
+터미널(명령을 입력하는 검은 창)을 열고 **자기 컴퓨터에 맞는 아래 한 줄을 복사 → 붙여넣기 → Enter** 하면 끝납니다.
+
+**🍎 macOS** — `Terminal(터미널)` 앱 실행 후:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**🪟 Windows** — 시작 메뉴에서 `PowerShell` 검색해 실행 후:
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+설치가 끝나면 같은 창에 **`claude`** 라고 입력하고 Enter 하세요. 처음 한 번만 **브라우저가 열려 로그인**(Claude Pro/Max/Team 또는 Console 계정)하면 되고, 그다음부터는 `claude`만 치면 바로 시작됩니다.
+
+> 막히면 공식 설치 가이드: <https://code.claude.com/docs/en/quickstart> · Windows는 `Git for Windows`가 깔려 있으면 더 매끄럽습니다.
 
 ---
 
-## 👥 팀 구성 (7 에이전트)
+## 🚀 이 팀 쓰는 법 (3단계)
 
-| 에이전트 | 역할 | model |
-|---|---|---|
-| [`design-lead`](.claude/agents/design-lead.md) | 디자인 전략·분배·종합·게이트(오케스트레이터) | opus |
-| [`ideation-prototyper`](.claude/agents/ideation-prototyper.md) | 컨셉·무드·프로토타입 시나리오·화면 흐름 | sonnet |
-| [`design-system-architect`](.claude/agents/design-system-architect.md) | 디자인 토큰·디자인 시스템 정의·정합 | opus |
-| [`figma-operator`](.claude/agents/figma-operator.md) | Figma 추출·생성·스크린샷 (공식 MCP) | sonnet |
-| [`accessibility-ux-reviewer`](.claude/agents/accessibility-ux-reviewer.md) | WCAG 접근성·UX 휴리스틱 검토(read-only) | opus |
-| [`code-connect-mapper`](.claude/agents/code-connect-mapper.md) | 디자인-코드 매핑(Code Connect)·drift 점검 | sonnet |
-| [`feedback-reporter`](.claude/agents/feedback-reporter.md) | 팀 작업 회고→본부 피드백 보고서(read 중심) | sonnet |
+1. **이 폴더를 `claude`로 엽니다.** 이 `design_agents` 폴더에서 터미널을 열고 `claude`를 입력하세요. 팀원(에이전트)과 단축 명령(스킬)이 자동으로 준비됩니다.
+2. **(필요할 때만) Figma를 1회 연결합니다.** Figma 화면을 읽어오거나 디자인-코드를 맞추려면 처음 한 번 브라우저로 Figma에 로그인해 연결하면 됩니다. → [Figma 연동 가이드](docs/FIGMA-MCP.md) (Figma를 안 쓰고 컨셉·토큰 정리만 할 거면 건너뛰어도 됩니다.)
+3. **한국어로 시킵니다.** 예를 들어 이렇게요.
+   ```
+   로그인 화면 디자인 컨셉 잡아줘
+   ```
+   → 컨셉 → 화면 흐름 → 색·폰트 정리 → 접근성 검토 → 코드 정합 순으로 알아서 진행합니다.
 
-## 🧩 슬래시 스킬 (8)
+---
 
-| 스킬 | 담당 | 산출물 |
-|---|---|---|
-| `/ideate` | ideation-prototyper | 디자인 컨셉 |
-| `/prototype` | ideation-prototyper | 프로토타입 시나리오 |
-| `/design-tokens` | design-system-architect | 디자인 토큰 |
-| `/design-system` | design-system-architect | 디자인 시스템 |
-| `/figma-sync` | figma-operator | Figma 추출/생성(쓰기=사람 승인) |
-| `/a11y-review` | accessibility-ux-reviewer | 접근성·UX 리포트 |
-| `/code-connect` | code-connect-mapper | Code Connect 매핑 |
-| `/feedback-agents` | feedback-reporter | 팀 작업 회고·피드백 보고서(→ 본부) |
+## 🤖 "에이전트"와 "스킬"이 뭐예요? (1분 개념)
+
+어렵지 않아요. 딱 두 가지만 알면 됩니다.
+
+- **에이전트(agents) = AI 팀원.** 각자 한 분야 전문가예요. 당신이 한국어로 시키면 **그룹장이 알맞은 팀원에게 알아서 맡깁니다.** → *팀원 이름을 외울 필요가 없어요.*
+- **스킬(skills) = `/`로 시작하는 단축 명령.** 그냥 말로 시켜도 되고, 콕 집어 부를 수도 있어요. 입력창에 **`/`만 쳐도 쓸 수 있는 명령 목록**이 뜹니다.
+
+**결론: 외울 건 없습니다. 그냥 한국어로 하고 싶은 걸 말하세요.** 아래 표는 "이 팀이 뭘 해줄 수 있는지" 참고용이에요.
+
+---
+
+## 👥 이 팀의 팀원(agents)
+
+| 팀원 | 무엇을 해줘요(쉬운 말) |
+|---|---|
+| `design-lead` (그룹장) | 요청을 듣고 어떤 팀원에게 맡길지 정하고, 결과를 모아 정리해 주는 팀장. 당신은 이 팀장에게만 말하면 됩니다. |
+| `ideation-prototyper` | 디자인 방향·무드·아이디어를 잡고, 화면이 어떻게 흘러가는지(유저 흐름) 정리해 줘요. |
+| `design-system-architect` | 색·글꼴·간격 같은 **디자인 규칙(토큰)** 과 버튼·카드 같은 **공통 부품(디자인 시스템)** 을 정리해 줘요. |
+| `figma-operator` | Figma에서 화면·부품·스크린샷을 **읽어오거나** (승인하면) 만들어 줘요. |
+| `accessibility-ux-reviewer` | 색 대비·글자 크기·터치 영역 등 **누구나 쓰기 편한지(접근성)** 와 사용성을 점검해 줘요. |
+| `code-connect-mapper` | Figma 디자인과 실제 화면 코드가 **서로 어긋나지 않게 연결·점검**해 줘요. |
+| `feedback-reporter` | 작업을 마친 뒤 잘된 점·개선점을 정리해 본부에 전달하는 **회고 담당**이에요. |
+
+---
+
+## ⌨️ 자주 쓰는 단축 명령(skills)
+
+| 명령 | 이렇게 말하면 돼요 |
+|---|---|
+| `/ideate` | "이 화면 디자인 컨셉·무드 잡아줘" |
+| `/prototype` | "이 기능 화면 흐름(유저플로우) 그려줘" |
+| `/design-tokens` | "색·폰트·간격 토큰 정리해줘" |
+| `/design-system` | "버튼·카드 같은 공통 컴포넌트 정리해줘" |
+| `/figma-sync` | "이 Figma 링크 읽어와줘 / 스크린샷 떠줘" (만들기는 사람 승인 후) |
+| `/a11y-review` | "이 화면 접근성·사용성 점검해줘" |
+| `/code-connect` | "이 컴포넌트 디자인이랑 코드 맞는지 봐줘" |
+| `/feedback-agents` | "이번 작업 회고해서 개선점 정리해줘" |
+
+> 입력창에 `/`만 쳐도 위 명령들이 목록으로 떠요. 외울 필요 없습니다.
+
+---
+
+## 💬 이렇게 말해보세요 (예시)
+
+```
+온보딩 화면 디자인 컨셉이랑 무드 잡아줘
+```
+```
+우리 서비스 색·폰트·간격 토큰을 정리해줘
+```
+```
+이 Figma 링크 읽어서 화면 구성 요약하고, 접근성도 점검해줘
+```
+```
+결제 버튼이 디자인이랑 실제 코드가 어긋나는지 확인해줘
+```
 
 ---
 
@@ -81,7 +130,11 @@ design_agents/
 ---
 🤖 Built with [Claude Code](https://claude.com/claude-code)
 
-## 🧠 팀 메모리 (MEMORY.md) 사용법
+---
+
+## 🛠 고급(개발자용)
+
+### 🧠 팀 메모리 (MEMORY.md) 사용법
 
 이 팀은 두 층의 메모리를 쓴다.
 - **CLAUDE.md** — 사람이 쓰는 안정적 규칙·라우팅(매 세션 전체 로드).
