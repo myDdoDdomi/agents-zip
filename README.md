@@ -54,6 +54,36 @@
 
 ---
 
+## 🤝 여러 팀 함께 쓰기 (멀티팀 조립 · `/team-assemble`)
+
+한 팀이 아니라 **여러 팀을 한 프로젝트에서 같이** 쓰고 싶을 때(예: **dev + QA**, **design + dev**),
+각 팀 에이전트를 `.claude/agents/` **팀별 하위폴더**로 정리하고 `/team-assemble` 스킬을 실행하면
+**협업용 `CLAUDE.md`를 자동 생성/갱신**해 줍니다.
+
+**1) 팀별 하위폴더로 복사**
+```
+대상-프로젝트/.claude/
+├── agents/
+│   ├── dev/      ← dev_agents 의 에이전트 *.md 복사
+│   ├── qa/       ← QA_agents 의 에이전트 *.md 복사
+│   └── design/   ← design_agents 의 에이전트 *.md 복사
+├── skills/team-assemble/   ← 이 레포의 스킬 폴더 복사
+└── CLAUDE.md     ← /team-assemble 이 생성/갱신
+```
+
+**2) 스킬 실행**
+```
+> /team-assemble
+```
+→ `agents/<팀>/` 폴더를 스캔해 ① **이름 충돌 자동 해결**(모든 팀의 `feedback-reporter`처럼 겹치는 이름을
+`dev-feedback-reporter`·`qa-feedback-reporter`로 리네임) ② **멀티팀 오케스트레이터 `CLAUDE.md`** 생성
+(팀 인벤토리·통합 라우팅표·**팀 간 핸드오프**: 예 `design → dev → qa → dev`). 팀을 더하거나 빼면 **다시 실행만** 하면 됩니다(재실행 안전).
+
+> **왜 필요한가:** Claude Code는 `.claude/agents/` 하위폴더를 재귀 인식하지만 에이전트 **식별자는 `name`뿐**이라
+> 폴더가 달라도 **같은 이름은 경고 없이 하나가 사라집니다.** `/team-assemble`이 이 충돌을 풀고 협업 라우팅을 자동으로 세팅합니다.
+
+---
+
 ## 🧱 전 팀 공통 표준
 
 모든 팀이 상속하는 원칙(상세: [`CLAUDE.md`](CLAUDE.md)):
