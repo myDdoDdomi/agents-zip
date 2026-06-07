@@ -15,9 +15,11 @@
 | Size=Large | `size="lg"` | | |
 
 ## 3. 토큰 대응
-| Figma 변수 | 코드 토큰 | 일치? |
-|---|---|---|
-| `color/action/primary` | `tokens.color.action.primary` | ✅/❌ |
+| Figma 변수 | 코드 토큰 | Tailwind key | 일치? |
+|---|---|---|---|
+| `color/action/primary` | `tokens.color.action.primary` | `extend.colors.action.primary` | ✅/❌ |
+
+> Tailwind를 안 쓰면 Tailwind key 열은 `N/A`. 1:1 어긋나면 §4 Drift에 적고 동기화 방향을 제안.
 
 ## 4. Drift (불일치) · 해소
 | 항목 | Figma | 코드 | 해소 방향(출처) |

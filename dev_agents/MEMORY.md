@@ -15,6 +15,7 @@
 
 ## 2. 환경·프로젝트 매핑 (Env & Project Mapping)
 - MCP: **GitHub + Context7** 사용. **모델 B(복사-라이브러리):** `agents/*.md`만 대상 프로젝트 `.claude/agents/`로 복사(CLAUDE.md·MEMORY.md는 비복사, HQ 측 기관기억).
+- **AI 신공격면(LLM 엔드포인트·MCP 도구 검증) + 공급망 점검이 2026 보안 기본**(2026-06-07): LLM/에이전트/MCP가 in-scope면 프롬프트 인젝션(OWASP LLM01)·MCP 도구 포이즈닝·RAG 포이즈닝·자격증명 탈취를 펜테스트에, lockfile 무결성·typosquatting·침해 패키지를 SCA에 포함. AI 발견은 키 회전만으로 종결 불가(입력 검증·컨텍스트 격리가 근본). → webapp-api-pentester·redteam-lead·remediation-lead·code-sca-auditor·pentest 스킬에 반영됨.
 
 ## 3. 반복 교정·선호 (Recurring Corrections / Preferences) — 레드팀 안전 수칙
 - **레드팀은 인가·ROE 게이트가 먼저다**(`redteam-lead §0`). 범위·대상·시간·연락선을 사용자에게 확인하기 전엔 공격 시작 금지.

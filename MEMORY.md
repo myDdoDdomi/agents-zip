@@ -16,10 +16,12 @@
 - 본부 전담팀(부서팀 아님): `trend-researcher`·`update-curator`·`team-fit-reviewer` + `/update-agents` 자기개선 파이프라인.
 
 ## 3. 반복 교정·선호 (Recurring Corrections / Preferences)
-- (아직 누적된 학습 없음 — 작업하며 채움)
+- [/update-agents 선별 기준] 경쟁 LLM(GPT/Gemini/Grok)·외부 오케스트레이터(LangGraph/CrewAI/OpenAI Agents SDK)는 §3-2 "공식 스택(Claude) 고정"으로 큐레이션에서 **탈락**시킨다(시장 지형 참고만). 시장 통계·채택률 수치도 실행 항목 아님 → 탈락. (2026-06-07)
+- [/update-agents 적용 원칙] RC·초기 채택 단계(예: TS7 GA 전·Vue Vapor·Angular Zoneless·MCP RC)는 **조건부로만** 박는다("해당 스택/GA 확인 시"). 즉시 상시 발동 금지 — 과잉 적용 방지. (2026-06-07)
+- [2026-06-07 1차 사이클 반영] AI/에이전트 보안(프롬프트 인젝션 LLM01·MCP 도구 포이즈닝·공급망)=dev·QA·본부 / 디자인 토큰(Figma↔Tailwind 1:1·다크-라이트 쌍)=design·QA / GEO·하이브리드 콘텐츠=marketing / 인간 편집 레이어 검수=marketing·docs·webnovel 에 반영함.
 
 ## 4. 도구·명령 메모 (Tools & Commands)
 - (아직 누적된 학습 없음 — 작업하며 채움)
 
 ## 5. 미해결·주의 (Open Issues / Cautions)
-- (아직 누적된 학습 없음 — 작업하며 채움)
+- [워치리스트] MCP 2026-07-28 RC(stateless·MCP Apps UI·Tasks·JSON Schema 2020-12) 정식 릴리스 후 `.mcp.json`/MCP 표준 갱신 필요 — 릴리스 확인 시 `/update-agents` diff로 재점검 (2026-06-07, 근거: 동향 리서치).
