@@ -1,0 +1,4 @@
+# runs/ — /update-agents 사이클 실행 기록 저장소
+# 각 실행은 update-YYYY-MM-DD.md 로 저장된다(다음 실행의 diff 기준점).
+# 같은 날 재실행은 -2 접미(update-YYYY-MM-DD-2.md).
+# 이 .gitkeep은 첫 실행 전에도 폴더가 존재하도록 둔다.

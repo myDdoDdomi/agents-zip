@@ -50,6 +50,17 @@
   팀 간 같은 이름은 **경고 없이 하나가 사라진다** → 그래서 조립 시 충돌 해결이 필수다.
 - 이 스킬은 대상 프로젝트에서 실행되므로, `team-assemble` 스킬 폴더를 대상 `.claude/skills/`로 함께 복사한다.
 
+### D. 자기 자신을 갱신한다 (Self-Update)
+본부가 시대에 뒤처지지 않도록, 사용자가 "최신 트렌드 반영해줘", "에이전트 팀들 업데이트해줘"라고
+하면 → **`/update-agents` 스킬**을 실행한다. (정의: `.claude/skills/update-agents/SKILL.md`)
+
+- 파이프라인: `trend-researcher`(IT 전반 균등 리서치) → **②동향 리포트 게이트** → `update-curator`(필터·
+  팀 영향 매핑·트렌드 관련 팀 자동 선별) → **3-b 선별 목록 확인 게이트** → `team-fit-reviewer` **팀별 병렬
+  검토(팬아웃)** → 종합 → **⑥인터뷰 보완 게이트** → **⑦적용 승인 게이트** → `team-architect` 적용 → `runs/` 기록.
+- 본부 전담 팀원 3명(`trend-researcher`·`update-curator`·`team-fit-reviewer`)은 부서팀이 아니라 **본부 소속**이다.
+- **트렌드 관련 팀만** 디벨롭하며, 팀 파일 수정 전 **사람 승인**(게이트 ⑦)이 전제다. 트리거는 수동(`/update-agents`)만.
+- `runs/update-YYYY-MM-DD.md`가 다음 실행의 **diff 기준점**이다(재실행 안전). 즉시 재사용 학습은 루트 `MEMORY.md`에도 반영.
+
 ## 3. 전 팀 공통 표준 (모든 부서 팀이 상속)
 
 새로 만드는 모든 팀, 그리고 기존 팀 개선 시 아래를 **공통 기준**으로 적용합니다.
@@ -117,19 +128,29 @@
 > 새 팀이 생기면 `team-architect`가 이 표에 한 줄 추가한다.
 > **배포 모델 A**=자기 산출물을 만드는 팀(직접 열기). **B**=기존 코드베이스 위에서 일하는 팀(복사). (상세: `team-architect`)
 
+> **본부 전담(부서팀 아님):** `trend-researcher`·`update-curator`·`team-fit-reviewer` + `/update-agents`(자기개선 파이프라인 §2-D).
+> 위 레지스트리 표는 *부서 팀 전용*이며, 이 셋은 본부가 자기 자신을 갱신하는 데 쓰는 본부 소속 팀원이다.
+
 ## 6. 디렉터리 안내
 
 ```
 team-agents/                          # (이 레포) 부서 에이전트 팀 본부
 ├── CLAUDE.md                         # (이 파일) 총괄 그룹장 / 오케스트레이터
 ├── README.md                         # 본부 소개 · 새 팀 만드는 법 · 팀 목록
+├── MEMORY.md                         # 본부 학습 누적층(자기개선) — CLAUDE.md가 @./MEMORY.md로 자동 로드
 ├── aiagents-deep-research-report.md  # 설계 근거: 2026 Claude 에이전트 생태계 리서치
 ├── claude-opus-4.8-운영노트.md       # 현행 모델(Opus 4.8) 기준: 라인업·effort·프롬프트 작성 기준
 ├── .claude/
 │   ├── agents/
-│   │   └── team-architect.md         # 팀 빌더(팩토리) — 새 부서 팀을 설계·생성
+│   │   ├── team-architect.md         # 팀 빌더(팩토리) — 새 부서 팀을 설계·생성
+│   │   ├── trend-researcher.md       # [본부] IT 전반 균등·광범위 동향 리서치(diff 모드)
+│   │   ├── update-curator.md         # [본부] 1차 필터·팀 영향 매핑·트렌드 관련 팀 자동 선별
+│   │   └── team-fit-reviewer.md      # [본부] 팀별 디벨롭 제안(팬아웃, read-only)
 │   └── skills/
-│       └── team-assemble/SKILL.md    # 멀티팀 조립 — agents 하위폴더 스캔→충돌해결→협업 CLAUDE.md 자동생성
+│       ├── team-assemble/SKILL.md    # 멀티팀 조립 — agents 하위폴더 스캔→충돌해결→협업 CLAUDE.md 자동생성
+│       └── update-agents/            # 본부 자기개선 파이프라인(SKILL.md + runs/ 실행기록)
+│           ├── SKILL.md
+│           └── runs/                 # update-YYYY-MM-DD.md (다음 실행 diff 기준점)
 ├── docs_agents/                      # [부서 팀] 문서화 (모델 A)
 ├── QA_agents/                        # [부서 팀] QA (모델 B)
 ├── design_agents/                    # [부서 팀] 디자인 (모델 A)
@@ -148,3 +169,14 @@ team-agents/                          # (이 레포) 부서 에이전트 팀 본
 3. 생성 후 §5 레지스트리에 등록하고, 사용자에게 여는 법/쓰는 법 안내.
 
 > 기존 팀 개선·에이전트 추가도 동일하게 `team-architect`의 표준·체크리스트로 처리한다.
+
+## 🧠 본부 메모리 — 자기개선 학습 누적층 (MEMORY.md)
+
+본부도 **2계층 메모리**를 운영한다. **CLAUDE.md(이 파일)** = 안정적 규칙·라우팅(매 세션 전체 로드). **MEMORY.md** = 작업하며 쌓이는 학습 — 아래 `@import`로 매 세션 자동 로드된다.
+
+- **본부 MEMORY.md에는** 어떤 IT 트렌드가 어느 팀에 어떻게 반영됐는지 · 반복되는 선별/적용 판단 기준 · 팀 빌딩에서 검증된 함정·환경 매핑을 적는다.
+- **`/update-agents`·`/feedback-agents` 회고**에서 *즉시 재사용 가능한* 학습이 나오면(`runs/` 기록·`feedback/` 보고와 별개로) 여기에도 반영한다(루프 닫기).
+- **승격/분리:** "항상 X" 규칙으로 굳으면 CLAUDE.md로 승격, 가변 학습은 MEMORY.md 유지. **200줄 초과 시 `memory/<주제>.md`로 분리**(온디맨드 로드).
+- **금지:** 비밀값·자격증명은 적지 않는다. CLAUDE.md와 모순되는 학습은 삭제.
+
+@./MEMORY.md
