@@ -17,8 +17,9 @@ allowed-tools: Read, Glob, Grep, Edit, Write
   서로 다른 팀이 **같은 `name`**(예: 두 팀이 모두 `code-reviewer`·`a11y-reviewer`를 가질 때)을 가지면
   **경고 없이 하나가 사라진다.** → 이 스킬이 **충돌을 자동 탐지·리네임**해 모든 에이전트가 공존하게 만든다.
 - **`feedback-reporter`만은 예외(특수 케이스).** 모든 팀이 같은 이름으로 두는 공통 기능이라 리네임 대상이
-  아니라, **단일 통합 reporter로 수렴**시킨다(§2-2-b). `/feedback-agents` 한 번으로 조립된 전 팀을 회고해
-  본부에 **통합 보고**되게 하기 위함이다.
+  아니라, **단일 통합 reporter로 수렴**시킨다(§2-2-b). reporter가 하나도 안 복사됐으면 공통 위치에 생성한다.
+  그리고 이를 호출하는 **통합 `/feedback-agents` 스킬도 이 스킬이 생성/갱신**한다(§2-4c) → 어떻게 복사했든
+  `/feedback-agents` 한 번으로 조립된 전 팀을 회고해 본부에 **통합 보고**된다.
 - 스킬은 일반 도구(Read/Glob/Edit/Write)로 파일을 읽고 `CLAUDE.md`를 고칠 수 있다(샌드박스 없음).
 
 ## 1. 전제 — 폴더 구조
@@ -52,7 +53,7 @@ allowed-tools: Read, Glob, Grep, Edit, Write
 | 옮기는 것 | 모델 B (복사-라이브러리: dev·QA) | 모델 A (자기완결형: docs·design·marketing·resume·edu·webnovel) |
 |---|---|---|
 | ① 에이전트 | `agents/*.md` → `대상/.claude/agents/<팀>/`(평면) | `.claude/agents/*.md` → `대상/.claude/agents/<팀>/` |
-| ② 스킬(슬래시 명령) | (없거나 `/feedback-agents`만) → `대상/.claude/skills/` | `.claude/skills/*` → `대상/.claude/skills/`(슬래시 명령 동작) |
+| ② 스킬(슬래시 명령) | 도메인 스킬만 `대상/.claude/skills/`로(예: dev의 `/pentest`·`/remediate`) | `.claude/skills/*` → `대상/.claude/skills/`(슬래시 명령 동작) |
 | ③ 템플릿 | (없음) | `templates/*` → `대상/templates/`(에이전트가 참조하는 상대경로 유지) |
 | ④ MCP 설정 | (없음) | `.mcp.json`이 있으면 **대상 `.mcp.json`에 병합**(비밀값은 `${ENV}` 유지, 키 충돌 시 사용자 확인) |
 
@@ -60,6 +61,8 @@ allowed-tools: Read, Glob, Grep, Edit, Write
 > 조립 환경에서 **협업 `CLAUDE.md`의 AUTO 블록·공통 거버넌스**(§3)로 대체된다. 핵심 산출 규칙·자가 점검은
 > 에이전트 본문에 자기완결적으로 들어 있어야 동작한다(앞으로 만들 팀은 `team-architect` §산출물 2가 강제).
 > ②~④는 사용자가 직접 복사·병합한다(이 스킬은 `agents/`만 스캔). 스캔 후 보고에서 누락 시 안내한다.
+> **`/feedback-agents`는 복사 안 해도 된다 — `/team-assemble`이 통합 본문으로 생성/갱신한다(§2-4c).** ②에서는
+> **도메인 스킬만** 옮기면 된다. 통합 reporter도 없으면 공통 위치에 생성되므로 명령이 항상 동작한다(§2-2-b·§2-4c).
 
 ## 2. 절차 (이 순서대로 수행)
 
@@ -94,7 +97,11 @@ allowed-tools: Read, Glob, Grep, Edit, Write
    - 통합 본문은 **스캔으로 파악한 "현재 조립된 팀 목록"을 회고 범위**로 박아, 전 팀 작업을 한 번에 회고하고
      **본부(team-architect)로 보내는 통합 `feedback.md` 1개**를 산출하도록 지시한다(아래 §2-2-c 본문 템플릿).
    - `feedback-reporter`가 **1개 팀에서만** 발견되면(단일 팀 조립) 덮어쓰지 않고 그대로 둔다(그 팀 전용으로 동작).
-   - `/feedback-agents` **스킬은 폴더명 기준이라 자연히 1개로 합쳐진다** — 이 단일 스킬이 통합 reporter를 호출한다.
+   - **`feedback-reporter`가 하나도 발견되지 않으면**(도메인 에이전트만 복사한 경우) 통합 스킬이 호출할 대상이
+     없으므로, **`./.claude/agents/feedback-reporter.md`를 §2-2-c 본문으로 새로 생성**한다(공통 위치, 팀 폴더 밖).
+     1개 이상 있으면 위 overwrite-identical 규칙대로 처리한다. → 어떤 식으로 복사했든 `/feedback-agents`가 항상 동작한다.
+6-2. **통합 `/feedback-agents` 스킬은 team-assemble이 생성/갱신한다(§2-4c).** 팀이 각자 복사해 온 `feedback-agents`
+   스킬이 있으면 같은 폴더(`.claude/skills/feedback-agents/`)로 합쳐지며, 없어도 §2-4c에서 생성되므로 **항상 명령이 존재한다.**
 
 **(c) 통합 `feedback-reporter` 본문 템플릿 (여러 팀 발견 시 모든 파일을 이 내용으로 덮어씀)**
 > `<조립된 팀 목록>`은 스캔 결과로 채운다(예: `dev, qa, design`). frontmatter는 `name: feedback-reporter`,
@@ -169,9 +176,17 @@ model: sonnet
    - 시드의 ②환경 매핑에 **스캔으로 파악한 조립된 팀 목록**을 1줄 자동 기입한다(나머지 섹션은 `(작업하며 채움)`).
    - 모델 A/B 무관하게 적용한다 — 이 MEMORY.md는 *조립 프로젝트 단위*의 크로스팀 학습층이다. 비밀값은 적지 않는다.
 
+### 2-4c. 통합 `/feedback-agents` 스킬 생성/갱신 (생성 아티팩트 — 재실행 안전)
+9-2. 대상 프로젝트에 **`./.claude/skills/feedback-agents/SKILL.md`를 생성/갱신**한다(폴더 없으면 만든다). 비밀값 금지.
+   - **여러 팀이 조립된 경우(§2-2-b로 통합 reporter가 만들어진 경우)**: 이 스킬을 **아래 §3-2 표준 통합 본문으로
+     생성/덮어쓴다**(생성 아티팩트 → 재실행마다 정규 내용으로 재생성, idempotent). 내용은 통합 `feedback-reporter`(§2-2-c)를
+     호출해 **조립된 전 팀(<조립된 팀 목록>)을 한 번에 회고 → 본부 통합 보고**하도록 박는다. `<조립된 팀 목록>`은 스캔 결과로 채운다.
+   - **단일 팀만 조립된 경우**: 그 팀이 복사해 온 기존 `feedback-agents` 스킬을 **그대로 둔다(덮어쓰지 않음)**. 없으면 §3-2 본문으로 만든다.
+
 ### 2-5. 보고
 10. 사용자에게 요약 보고(§4 형식): 조립된 팀·에이전트 수, **리네임된 이름(충돌 해결)**,
-    **`feedback-reporter` 통합 수렴 결과**(여러 팀 → 단일 통합), **`MEMORY.md` 생성/유지 여부**,
+    **`feedback-reporter` 통합 수렴 결과**(여러 팀 → 단일 통합, reporter 0개였으면 공통 위치 생성),
+    **`/feedback-agents` 스킬 생성/갱신 여부**, **`MEMORY.md` 생성/유지 여부**,
     경고(파싱 실패 파일), 갱신된 `CLAUDE.md` 위치, 다음 액션.
     - **모델 A 팀이 섞여 있으면** 에이전트만으로는 부족할 수 있으니 **스킬·`templates/`·`.mcp.json` 동반 복사·병합**(§1-1)을
       함께 안내한다(이 스킬은 `agents/`만 스캔하므로).
@@ -216,10 +231,11 @@ model: sonnet
 - `feedback-reporter`: 여러 팀의 reporter를 **단일 통합 reporter로 수렴**(per-팀 분할 안 함). `/feedback-agents` 한 번으로
   조립된 전 팀(<조립된 팀 목록>)을 회고해 본부에 **통합 보고**됩니다.
 
-## (있으면) 사용 가능한 스킬
+## 사용 가능한 스킬
 | 스킬 | 설명 |
 |---|---|
-| /test-case | … |
+| /feedback-agents | 조립된 전 팀(<조립된 팀 목록>) 작업 회고 → 본부(team-architect) 통합 보고 (항상 존재) |
+| /test-case | … (팀이 복사해 온 도메인 스킬이 있으면 행 추가) |
 
 ## 공통 거버넌스 (전 팀 상속)
 - **그룹장=오케스트레이터**(라우팅·종합·게이트) · **역할=최소권한** · **근거·투명성**(추측 금지, 한계 명시)
@@ -264,6 +280,42 @@ model: sonnet
 - (작업하며 채움)
 ```
 
+## 3-2. 생성할 `/feedback-agents` 스킬 본문 (§2-4c — 여러 팀 조립 시 정규 통합 본문)
+
+> 대상 프로젝트의 `.claude/skills/feedback-agents/SKILL.md`로 아래를 쓴다. 기존 팀 `feedback-agents/SKILL.md`
+> 포맷(frontmatter `name: feedback-agents` + description + 트리거 `/feedback-agents` + 사용법 1줄 + `feedback-reporter`
+> 위임 흐름)을 본떠 **"조립 멀티팀 통합 회고 → 본부 보고"** 로 작성한다. `<조립된 팀 목록>`은 스캔 결과로 채운다(예: `dev, qa, design`).
+
+```markdown
+---
+name: feedback-agents
+description: 이 프로젝트에 조립된 멀티팀(<조립된 팀 목록>)이 한 작업을 한 번에 회고해, 본부(team-architect)에 전달할 통합 피드백 보고서(feedback.md 1개)를 만듭니다. "회고", "피드백 보고서", "팀 개선점 정리" 요청 시 사용. 사용법 /feedback-agents [회고할 작업 주제(선택)]
+---
+
+# /feedback-agents — 조립 멀티팀 통합 회고·피드백 보고
+
+통합 `feedback-reporter` 에이전트를 사용해 **이 프로젝트에 조립된 전 팀(<조립된 팀 목록>)이 한 작업을 한 번에
+회고**하고, 본부(team-architect)가 각 팀 정의·스킬·문서를 바로 개선할 수 있도록 통합 `feedback.md` 1개를 산출합니다.
+
+> 이 스킬은 `/team-assemble`가 생성한 **생성 아티팩트**입니다(팀을 추가/제거하고 다시 조립하면 회고 범위가 갱신됩니다).
+> 스킬 없이도 **`feedback-reporter` 에이전트를 직접 호출**("feedback-reporter로 이번 작업을 회고해줘")하면 동일하게 동작합니다.
+
+## 절차
+1. **범위 결정:** `feedback/`에서 가장 최근 통합 보고서를 찾는다. 있으면 그 시점 이후, 없으면 작업 전체가 회고 범위.
+2. 통합 `feedback-reporter`에게 위임: git 로그·세션 맥락·산출물 흔적을 best-effort로 수집 →
+   **팀별로** 무엇을 했는지 갈라 `현상 → 영향 → 권장 업데이트(소속팀·대상 파일)` + 심각도(🔴/🟠/🟡)로 이슈 도출.
+3. 표준 6섹션 양식(공통 이슈는 상단, **§6 팀별 회고에 조립된 팀마다 하위 섹션**)으로 통합 `feedback.md` 작성.
+4. **저장:** `feedback/`에 날짜 포함 파일명으로 저장(폴더 없으면 생성). 본부(team-architect)에 전달한다.
+5. 저장 경로와 핵심 이슈 요약(표)을 보고한다.
+
+## 주의
+- **best-effort 회고.** 가용 신호(git·세션·산출물 흔적) 기반이며 세션 외 작업은 누락될 수 있음을 보고서 머리말에 1줄 명시.
+  근거 불확실 항목은 추측하지 말고 `(확인 필요)`로 표기.
+- 회고·feedback 파일 1개만 작성한다 — 직접 산출물 작업·외부 변경(머지·배포 등)은 하지 않는다.
+
+인자(`$ARGUMENTS`)가 있으면 회고할 작업 주제로 사용하고, 없으면 전체 범위로 회고한다.
+```
+
 ## 4. 보고 형식 (사용자에게)
 
 ```
@@ -276,6 +328,8 @@ model: sonnet
 🔧 이름 충돌 해결(리네임): N건
 - 예: code-reviewer → dev-code-reviewer, qa-code-reviewer
 🔁 feedback-reporter: 여러 팀 → 단일 통합 reporter로 수렴(/feedback-agents 한 번으로 전 팀 회고→본부 통합 보고)
+    (reporter가 하나도 없었으면 .claude/agents/feedback-reporter.md를 공통 위치에 생성)
+📮 /feedback-agents 스킬: <생성 | 갱신 | 단일 팀 → 기존 보존> — .claude/skills/feedback-agents/ (항상 명령 존재)
 🧩 모델 A 팀 동반 복사 안내(섞여 있으면): 스킬·templates/·.mcp.json도 함께 옮겨야 자기완결 동작(§1-1)
 🧠 MEMORY.md: <새로 생성(시드) | 기존 보존(누적 학습 유지)> — 크로스팀 학습 누적층, @./MEMORY.md로 자동 로드
 ⚠️ 경고: <frontmatter 없는 파일 등, 없으면 생략>
@@ -311,6 +365,9 @@ model: sonnet
 - **재실행 안전(idempotent).** 이미 리네임돼 충돌이 없으면 그대로 두고 블록만 다시 생성한다.
   `feedback-reporter`는 매번 동일한 통합 본문으로 덮어쓰므로(overwrite-identical) 재실행해도 결과가 같다.
   단일 팀만 있으면 덮어쓰지 않고 그 팀 전용 reporter를 보존한다.
+- **통합 `/feedback-agents` 스킬과 (reporter가 없을 때의) `feedback-reporter` 에이전트는 생성 아티팩트**로,
+  여러 팀 조립 시 매번 정규 통합 내용으로 재생성한다(idempotent). **단일 팀 조립 시엔 그 팀 전용 스킬을 보존**
+  (덮어쓰지 않음)한다. 두 아티팩트 모두 **비밀값을 적지 않는다.**
 - **MEMORY.md는 존재하면 덮어쓰지 않는다(누적 보존).** 새로 만들 때만 §3-1 시드를 넣는다. 재실행 시
   이미 있으면 그대로 둔다(사용자·이전 세션이 쌓은 크로스팀 학습을 잃지 않게). 비밀값은 시드에도 적지 않는다.
 - 파싱 불가/`name` 누락 파일은 **건너뛰고 경고**에 남긴다(임의로 이름을 만들지 않는다).

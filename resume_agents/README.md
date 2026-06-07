@@ -115,6 +115,50 @@ irm https://claude.ai/install.ps1 | iex
 > 우리는 *경력 근거 → 회사 맞춤 이력서·포트폴리오 문서*까지 만듭니다. 코드 구현·비주얼·범용 카피는 위 팀이 더 잘합니다.
 
 ---
+
+## 🤝 다른 팀과 함께 쓰기 (멀티팀 조립)
+
+이 이력서팀을 **개발(dev)·디자인·QA 등 다른 팀과 한 프로젝트에서 같이** 쓰고 싶을 때 읽으세요.
+(이력서팀만 혼자 쓸 거면 — 이 `resume_agents` 폴더를 그냥 직접 열면 됩니다. 조립은 필요 없어요.)
+
+이력서팀은 **폴더를 직접 여는 팀(모델 A)** 이라, 다른 팀과 합칠 땐 **에이전트(팀원)만 옮기면 부족**해요.
+슬래시 명령(스킬)·문서 템플릿·구글/깃허브 연결 설정까지 함께 옮겨야 제대로 동작합니다.
+
+### 무엇을 복사하나 (4가지)
+
+대상 프로젝트(여러 팀을 같이 쓸 폴더)로 아래 4가지를 옮깁니다.
+
+1. **① 팀원(에이전트):** `resume_agents/.claude/agents/*` → `대상-프로젝트/.claude/agents/resume/`
+2. **② 단축 명령(스킬):** `resume_agents/.claude/skills/*` → `대상-프로젝트/.claude/skills/` (슬래시 명령이 동작하려면 필수)
+3. **③ 문서 템플릿:** `resume_agents/templates/*` → `대상-프로젝트/templates/` (에이전트가 참조하는 상대경로를 유지)
+4. **④ 구글·깃허브 연결 설정:** `resume_agents/.mcp.json` → `대상-프로젝트/.mcp.json`에 **합칩니다(병합)**.
+   비밀값은 들어 있지 않고 `${ENV}` 형태로 두며, 같은 키가 이미 있으면 사용자에게 확인합니다.
+   + 본부의 `team-assemble` 스킬 폴더도 대상 `.claude/skills/`로 함께 복사하세요.
+
+> 회고용 `/feedback-agents`는 **따로 복사하지 않아도** `/team-assemble`이 자동으로 만들어 줍니다(위 도메인 스킬만 옮기면 돼요).
+> `dev_agents`처럼 **복사해서 쓰는 팀(모델 B)** 은 `agents/*.md`만 옮기면 됩니다(스킬·템플릿·MCP 없음).
+
+### 실행
+
+대상 프로젝트에서 **`/team-assemble`를 한 번** 실행하면 됩니다.
+→ 팀원 이름이 겹쳐도 자동으로 정리되고(충돌 해결), 협업용 `CLAUDE.md`·`MEMORY.md`와 통합 `/feedback-agents`가 자동으로 만들어집니다.
+팀을 더하거나 빼면 **다시 실행만** 하면 됩니다(여러 번 돌려도 안전).
+
+### 알아둘 점
+
+- 이력서팀의 `CLAUDE.md`·`MEMORY.md`는 따라가지 않습니다 — 협업용 `CLAUDE.md`의 자동 블록과 공통 규칙으로 대체돼요.
+- 회고 담당(`feedback-reporter`)은 조립 시 **하나로 통합**됩니다. `/feedback-agents` 한 번이면 합쳐진 **모든 팀**을 회고해 본부로 보고됩니다.
+
+### 🔌 구글·깃허브(MCP) 주의 — 각 1회 재인증
+
+이력서팀의 `.mcp.json`에는 **Google Workspace(Docs·Drive)** 와 **GitHub 원격 MCP** 연결 설정이 들어 있어요.
+대상 프로젝트로 병합한 뒤, **각 연결을 한 번씩 다시 인증**하면 됩니다(비밀값은 레포에 안 들어가요).
+- **Google 문서·드라이브** — 본인 구글 계정으로 브라우저에서 1회 로그인 → [`docs/GOOGLE-WORKSPACE-MCP.md`](docs/GOOGLE-WORKSPACE-MCP.md)
+- **GitHub** — 읽기 전용 PAT(토큰)를 `GITHUB_PAT` 환경변수에 1회 넣기(OAuth 로그인은 미지원) → [`docs/GITHUB-MCP.md`](docs/GITHUB-MCP.md)
+
+> 더 자세히는 본부의 루트 `README.md`/`CLAUDE.md`(§2-C 조립)와 `/team-assemble` 스킬을 보세요.
+
+---
 🤖 Built with [Claude Code](https://claude.com/claude-code)
 
 ---
