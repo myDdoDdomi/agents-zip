@@ -13,7 +13,7 @@
 - **모델 B(복사-라이브러리):** `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 복사해 사용. **CLAUDE.md·MEMORY.md는 본부(HQ) 측 팀 기관기억**(복사 대상 아님).
 
 ## 3. 반복 교정·선호 (Recurring Corrections / Preferences)
-- (아직 누적된 학습 없음 — 작업하며 채움)
+- **화면 품질 = a11y와 비주얼로 분리(상보).** 접근성(키보드·스크린리더·ARIA·대비 기준)은 `accessibility-tester`, 비주얼·디자인 정합(토큰·비주얼 리그레션·반응형)은 `visual-design-qa-engineer`로 나눠 겹치지 않게 본다. 비주얼 정합 QA는 디자인 토큰/Figma·명세를 **SSOT로 대조**하고, 기준이 없으면 `(확인 필요)` 표기 후 design 팀/사용자에 요청한다. (2026-06-07, 근거: 사용자 지시)
 
 ## 4. 도구·명령 메모 (Tools & Commands)
 - (아직 누적된 학습 없음 — 작업하며 채움)

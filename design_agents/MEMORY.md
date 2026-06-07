@@ -11,6 +11,7 @@
 
 ## 2. 환경·프로젝트 매핑 (Env & Project Mapping)
 - MCP: **Figma 공식 MCP**로 디자인 추출·디자인-코드 정합 확인.
+- `design-researcher`는 **21st.dev·shadcn 등 구현/컴포넌트 레지스트리·라이브 제품(Mobbin) 서칭** 가능(WebSearch/WebFetch). 실제 구현 레퍼런스는 **라이선스 확인 후 '개발 핸드오프 노트'로 `dev_agents`에 직행**(목업 스킵 가능). 멀티팀은 `/team-assemble`로 design+dev 조립. (2026-06-06, 근거: 사용자 지시)
 
 ## 3. 반복 교정·선호 (Recurring Corrections / Preferences)
 - (아직 누적된 학습 없음 — 작업하며 채움)

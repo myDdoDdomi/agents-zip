@@ -102,9 +102,13 @@ irm https://claude.ai/install.ps1 | iex
 ```
 > /team-assemble
 ```
-→ `agents/<팀>/` 폴더를 스캔해 ① **이름 충돌 자동 해결**(모든 팀의 `feedback-reporter`처럼 겹치는 이름을
-`dev-feedback-reporter`·`qa-feedback-reporter`로 리네임) ② **멀티팀 오케스트레이터 `CLAUDE.md`** 생성
+→ `agents/<팀>/` 폴더를 스캔해 ① **이름 충돌 자동 해결**(두 팀이 같은 `code-reviewer`를 가질 때처럼 겹치는 이름을
+`dev-code-reviewer`·`qa-code-reviewer`로 리네임. 단 공통 `feedback-reporter`는 **단일 통합 reporter로 수렴** —
+`/feedback-agents` 한 번으로 전 팀을 회고해 본부에 **통합 보고**) ② **멀티팀 오케스트레이터 `CLAUDE.md`** 생성
 (팀 인벤토리·통합 라우팅표·**팀 간 핸드오프**: 예 `design → dev → qa → dev`). 팀을 더하거나 빼면 **다시 실행만** 하면 됩니다(재실행 안전).
+
+> **모델 A 팀(docs·design 등)을 조립**할 땐 에이전트뿐 아니라 그 팀의 **스킬·`templates/`·`.mcp.json`도 함께** 옮겨야
+> 자기완결로 동작합니다(에이전트가 자기 팀 스킬·템플릿·MCP에 의존). 모델 B 팀(dev·QA)은 `agents/*.md`만 복사하면 됩니다.
 
 > **왜 필요한가:** Claude Code는 `.claude/agents/` 하위폴더를 재귀 인식하지만 에이전트 **식별자는 `name`뿐**이라
 > 폴더가 달라도 **같은 이름은 경고 없이 하나가 사라집니다.** `/team-assemble`이 이 충돌을 풀고 협업 라우팅을 자동으로 세팅합니다.

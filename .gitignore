@@ -19,6 +19,12 @@ docs_agents_history_backup.bundle
 *.tmp
 gstack.json
 
+# === edu_agents — 별도 repo로 관리, 본부 레포 비커밋 ===
+/edu_agents/
+
+# === webnovel_agents — 원고는 개인 자산, 본부 레포 비커밋 ===
+/webnovel_agents/
+
 # === Claude Code 로컬 설정 (개인별) ===
 .claude/settings.local.json
 

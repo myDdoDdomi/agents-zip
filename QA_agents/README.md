@@ -1,6 +1,6 @@
 # QA Agents Team 🧪 — 우리 프로젝트를 대신 검증해주는 QA 전문가 팀
 
-테스트 전략부터 케이스 설계, 자동화, API·성능·보안·접근성 검증, 회귀, 버그 정리까지 — 실제 대형 IT 기업의 QA 풀세트를 **여러 명의 AI 전문가**로 옮겨 담은 팀입니다. "이 기능 제대로 동작하나?", "릴리스해도 되나?"를 대신 따져줍니다.
+테스트 전략부터 케이스 설계, 자동화, API·성능·보안·접근성·비주얼 디자인 정합 검증, 회귀, 버그 정리까지 — 실제 대형 IT 기업의 QA 풀세트를 **여러 명의 AI 전문가**로 옮겨 담은 팀입니다. "이 기능 제대로 동작하나?", "릴리스해도 되나?"를 대신 따져줍니다.
 
 > 📌 **이 팀은 '이미 만들어진 프로젝트(코드)'를 검증하는 팀이라, 위 4개 작성팀(문서·디자인 등)과 쓰는 방식이 조금 다릅니다.** 작성팀은 폴더를 그냥 열어서 쓰지만, 이 팀은 **에이전트 파일을 내 프로젝트로 '복사'해서** 그 프로젝트 안에서 함께 일하게 만듭니다. (아래 "이 팀 쓰는 법" 참고)
 
@@ -80,6 +80,7 @@ Copy-Item QA_agents\agents\*.md 내-프로젝트\.claude\agents\
 | `performance-test-engineer` (성능 테스트) | 사용자가 몰려도 **느려지거나 죽지 않는지**(부하·속도)를 점검하고 병목을 찾습니다 |
 | `security-test-engineer` (보안 테스트) | **해킹·취약점·비밀번호 노출** 같은 보안 약점을 점검합니다 (공격이 아니라 방어 점검) |
 | `accessibility-tester` (접근성) | **장애가 있는 사용자도 쓸 수 있는지**(키보드만으로 조작, 화면낭독기, 색 대비 등)를 점검합니다 |
+| `visual-design-qa-engineer` (비주얼·디자인 정합) | **만든 화면이 디자인(Figma/디자인 시스템)대로 보이는지** — 색·글꼴·간격 같은 디자인 토큰 준수, 바뀐 부분이 의도치 않게 어긋나지 않았는지(비주얼 리그레션), 화면 크기별 레이아웃·다크모드까지 확인합니다 (접근성은 위 `accessibility-tester` 담당, 이쪽은 "보이는 디자인"만) |
 | `mobile-qa-engineer` (모바일 QA) | 다양한 **휴대폰 기종·권한·네트워크 환경**에서 잘 도는지 확인합니다 |
 | `exploratory-tester` (탐색 테스트) | 정해진 케이스 밖에서 **"이러면 깨지지 않을까?" 하는 엣지 상황을 자유롭게 사냥**합니다 |
 | `regression-test-engineer` (회귀 테스트) | 뭔가 바꿨을 때 **멀쩡하던 다른 기능이 망가지지 않았는지** 확인합니다 |
@@ -127,7 +128,7 @@ Copy-Item QA_agents\agents\*.md 내-프로젝트\.claude\agents\
    │           │
    │           ▼
    ├──▶ [manual-functional-tester] / [automation-engineer] ── 실행·자동화
-   ├──▶ [api-test-engineer] [performance-...] [security-...] [accessibility-...] [mobile-...]
+   ├──▶ [api-test-engineer] [performance-...] [security-...] [accessibility-...] [visual-design-qa-...] [mobile-...]
    ├──▶ [exploratory-tester] ── 추가 위험 탐색
    ├──▶ [regression-test-engineer] ── 회귀 검증
    │           │
@@ -137,6 +138,8 @@ Copy-Item QA_agents\agents\*.md 내-프로젝트\.claude\agents\
    ▼
 [qa-lead] ── 결과 종합 · Exit Criteria로 릴리스 판정
 ```
+
+> **design 팀과의 핸드오프:** 디자인 팀(`design_agents`)이 만든 디자인 토큰/시스템·Figma 추출물·디자인 명세가 있으면, `visual-design-qa-engineer`가 그것을 **기준(SSOT)**으로 삼아 "빌드된 화면이 디자인대로 구현됐는지"(토큰 준수·비주얼 리그레션·반응형)를 검증합니다. 접근성은 `accessibility-tester`가 따로 봅니다(상보).
 
 ### 설치 / 사용 (개발자용 상세)
 

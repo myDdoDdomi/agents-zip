@@ -50,6 +50,7 @@
 | 부하/스트레스/내구, 병목 분석 | `performance-test-engineer` |
 | OWASP·취약점·시크릿·의존성 (방어적) | `security-test-engineer` |
 | WCAG 접근성 (키보드/스크린리더/대비) | `accessibility-tester` |
+| 디자인 정합·비주얼 리그레션·반응형·토큰 준수 검증 | `visual-design-qa-engineer` |
 | 모바일 (파편화·생명주기·권한·네트워크) | `mobile-qa-engineer` |
 | 엣지케이스 사냥, 자유 탐색 | `exploratory-tester` |
 | 변경 영향 분석, 회귀 검증 (변경/PR 시 항상) | `regression-test-engineer` |
@@ -57,7 +58,8 @@
 | (회고) 이 팀 작업을 회고해 본부에 피드백 보고 (`/feedback-agents`) | `feedback-reporter` |
 
 > 보통의 흐름: **`qa-lead`로 전략 수립 → 전문 에이전트 병렬 실행 → `bug-triager`로 결함 정리 → `qa-lead`로 종합·판정.**
-> 서로 독립적인 검증(API/성능/보안/접근성/모바일 등)은 병렬로 위임해 처리 속도를 높인다.
+> 서로 독립적인 검증(API/성능/보안/접근성/비주얼정합/모바일 등)은 병렬로 위임해 처리 속도를 높인다.
+> **상보 경계:** `accessibility-tester`=WCAG a11y(키보드·스크린리더·ARIA·대비 기준), `visual-design-qa-engineer`=디자인 정합(토큰·비주얼 리그레션·반응형) — 화면 품질을 a11y와 비주얼로 나눠 겹치지 않게 본다. 디자인 토큰/Figma·명세가 있으면 `visual-design-qa-engineer`의 기준(SSOT)으로 넘긴다(design 팀 핸드오프).
 
 ---
 
@@ -69,7 +71,7 @@
 - [ ] 핵심 사용자 시나리오 **100% 통과**
 - [ ] 회귀 스위트 통과 (자동화 공백 명시)
 - [ ] 변경 영향 영역 검증 완료
-- [ ] (해당 시) 성능 SLO·보안·접근성·컴플라이언스 기준 충족
+- [ ] (해당 시) 성능 SLO·보안·접근성·**디자인 정합(토큰/비주얼 리그레션)**·컴플라이언스 기준 충족
 - [ ] 미해결 리스크는 문서화 + 사람 승인
 
 ---
@@ -90,7 +92,7 @@
 QA_agents/
 ├── CLAUDE.md        ← (이 파일) QA 그룹장 / 오케스트레이터 지침
 ├── README.md        ← 팀 소개·설치·사용법
-├── agents/          ← 전문 QA 서브에이전트 13종 (회고용 feedback-reporter 포함)
+├── agents/          ← 전문 QA 서브에이전트 14종 (회고용 feedback-reporter 포함)
 └── skills/          ← 슬래시 스킬 (feedback-agents — 대상 프로젝트 .claude/skills/로 복사)
 ```
 
