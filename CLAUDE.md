@@ -62,6 +62,10 @@
 - **트렌드 관련 팀만** 디벨롭하며, 팀 파일 수정 전 **사람 승인**(게이트 ⑦)이 전제다. 트리거는 수동(`/update-agents`)만.
 - `runs/update-YYYY-MM-DD.md`가 다음 실행의 **diff 기준점**이다(재실행 안전). 즉시 재사용 학습은 루트 `MEMORY.md`에도 반영.
 
+> **읽기용 브리핑 vs 팀 디벨롭 구분:** 사람이 읽는 **IT 뉴스 종합 브리핑**이 필요하면 → **`/tech-briefing`**(정보 제공 전용,
+> 팀 수정 없음, `tech-news-reporter`가 발행 → `briefings/`). 트렌드를 **팀에 적용·디벨롭**하려면 → **`/update-agents`**(필터·
+> 매핑·적용). 둘은 목적이 다르다.
+
 ## 3. 전 팀 공통 표준 (모든 부서 팀이 상속)
 
 새로 만드는 모든 팀, 그리고 기존 팀 개선 시 아래를 **공통 기준**으로 적용합니다.
@@ -133,8 +137,9 @@
 > 새 팀이 생기면 `team-architect`가 이 표에 한 줄 추가한다.
 > **배포 모델 A**=자기 산출물을 만드는 팀(직접 열기). **B**=기존 코드베이스 위에서 일하는 팀(복사). (상세: `team-architect`)
 
-> **본부 전담(부서팀 아님):** `trend-researcher`·`update-curator`·`team-fit-reviewer` + `/update-agents`(자기개선 파이프라인 §2-D).
-> 위 레지스트리 표는 *부서 팀 전용*이며, 이 셋은 본부가 자기 자신을 갱신하는 데 쓰는 본부 소속 팀원이다.
+> **본부 전담(부서팀 아님):** `trend-researcher`·`update-curator`·`team-fit-reviewer` + `/update-agents`(자기개선 파이프라인 §2-D),
+> 그리고 `tech-news-reporter` + `/tech-briefing`(읽기용 IT 뉴스 종합 브리핑 발행 — 정보 제공 전용, 팀 수정 없음 → `briefings/`).
+> 위 레지스트리 표는 *부서 팀 전용*이며, 이들은 본부 소속 유틸리티다(자기 갱신·정보 브리핑).
 
 ## 6. 디렉터리 안내
 
@@ -150,12 +155,15 @@ team-agents/                          # (이 레포) 부서 에이전트 팀 본
 │   │   ├── team-architect.md         # 팀 빌더(팩토리) — 새 부서 팀을 설계·생성
 │   │   ├── trend-researcher.md       # [본부] IT 전반 균등·광범위 동향 리서치(diff 모드)
 │   │   ├── update-curator.md         # [본부] 1차 필터·팀 영향 매핑·트렌드 관련 팀 자동 선별
-│   │   └── team-fit-reviewer.md      # [본부] 팀별 디벨롭 제안(팬아웃, read-only)
+│   │   ├── team-fit-reviewer.md      # [본부] 팀별 디벨롭 제안(팬아웃, read-only)
+│   │   └── tech-news-reporter.md     # [본부] 읽기용 IT 뉴스 종합 브리핑 발행(정보 제공 전용)
 │   └── skills/
 │       ├── team-assemble/SKILL.md    # 멀티팀 조립 — agents 하위폴더 스캔→충돌해결→협업 CLAUDE.md 자동생성
+│       ├── tech-briefing/SKILL.md    # 읽기용 IT 뉴스 종합 브리핑 발행(→ briefings/, diff 모드)
 │       └── update-agents/            # 본부 자기개선 파이프라인(SKILL.md + runs/ 실행기록)
 │           ├── SKILL.md
 │           └── runs/                 # update-YYYY-MM-DD.md (다음 실행 diff 기준점)
+├── briefings/                        # [본부] IT 뉴스 브리핑 발행물(briefing-YYYY-MM-DD.md, 다음 diff 기준점)
 ├── docs_agents/                      # [부서 팀] 문서화 (모델 A)
 ├── QA_agents/                        # [부서 팀] QA (모델 B)
 ├── design_agents/                    # [부서 팀] 디자인 (모델 A)
