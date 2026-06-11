@@ -11,11 +11,15 @@
 - **mock-prod 패리티 미점검이 최대 반복 결함 원인**(2026-06-07, FitMate): mock에만 있고 실 구현체에 스텁(`return []`/`null`/not-implemented)으로 남은 메서드가 prod에서만 깨짐 — 정적 검사·단위테스트 통과. types 인터페이스 대비 실구현 완성도 self-check. → implementer/code-reviewer 본문에 반영됨.
 - **Firebase Functions v2 시크릿 충돌**(2026-06-07, FitMate): `defineSecret`으로 선언한 시크릿을 `functions/.env`에 동일 이름으로 두면 충돌해 배포 실패. → `.secret.local`(에뮬레이터) 또는 Secret Manager(배포)에 둔다.
 - **에뮬레이터 장기 구동 degradation**(2026-06-07, FitMate): 수 시간·수십 회 핫리로드 후 함수 워커가 `deadline-exceeded` 반환 — 코드 회귀로 오판하기 쉬움. 회귀 결론 전에 **에뮬레이터 재기동 먼저** 확인(코드 무변경으로 해소됨).
+- **서비스 경계 계약 드리프트는 차원을 바꿔 재발한다**(2026-06-10, Chesslytics 4세대): casing(1세대)→필수 필드 존재(2)→부호/방향 해석(3)→상태 시점 before/after(4)로 같은 경계에서 매번 다른 차원으로 진화. 한 차원 점검은 다음 차원을 못 잡음 → **4차원 체크리스트**로 점검하고, 테스트에서 계약 값을 `expect.any(String)`으로 뭉개지 않는다(any-매처가 시점 불일치를 은폐한 실사례). → code-reviewer·implementer·CLAUDE DoD 반영됨.
+- **단위테스트 green 직후 무핸드오프 프로덕션 배포 2사이클 연속 재발**(2026-06-10): UI 아키텍처 변경(자동 토글→on-demand 교체) 포함 기능이 QA 개입 없이 배포됨 — 회귀·엣지케이스·a11y 미검증. → dev-lead 계획 규율·CLAUDE DoD에 "UI 아키텍처 변경=QA 핸드오프 필수" + qa-lead 측 능동 제안 트리거(이중 방어) 반영됨.
 - **서버리스 런타임 import 해석 차이**(2026-06-07, FitMate): `admin.firestore.FieldValue`가 에뮬레이터 런타임에서 `undefined`로 해석돼 정적분석·단위테스트를 통과하고 E2E에서야 발견. 모듈러 직접 import(`require("firebase-admin/firestore")`)로 해소. → 백엔드 핵심 경로 변경은 통합 스모크 필수(implementer 본문 반영).
 
 ## 2. 환경·프로젝트 매핑 (Env & Project Mapping)
 - MCP: **GitHub + Context7** 사용. **모델 B(복사-라이브러리):** `agents/*.md`만 대상 프로젝트 `.claude/agents/`로 복사(CLAUDE.md·MEMORY.md는 비복사, HQ 측 기관기억).
 - **AI 신공격면(LLM 엔드포인트·MCP 도구 검증) + 공급망 점검이 2026 보안 기본**(2026-06-07): LLM/에이전트/MCP가 in-scope면 프롬프트 인젝션(OWASP LLM01)·MCP 도구 포이즈닝·RAG 포이즈닝·자격증명 탈취를 펜테스트에, lockfile 무결성·typosquatting·침해 패키지를 SCA에 포함. AI 발견은 키 회전만으로 종결 불가(입력 검증·컨텍스트 격리가 근본). → webapp-api-pentester·redteam-lead·remediation-lead·code-sca-auditor·pentest 스킬에 반영됨.
+- **[Miasma 2026-06-10] OIDC trusted publishing + SLSA 증명 위조로 신뢰체인 자체가 공격면**: preinstall/postinstall 훅 감사·lockfile 고정·SLSA 증명 독립 검증을 SCA 기본 체크리스트에 포함(OIDC를 신뢰 가정으로 두지 않음). 계정 침해 후 지연 무기화(수 주 뒤 악성 버전) 패턴 교차 점검. 근거: Miasma npm 공급망(@redhat-cloud-services 32개 패키지). → code-sca-auditor·redteam-lead·remediation-lead·pentest 스킬에 반영됨.
+- **[2026-06-10] OWASP Top 10 for Agentic Applications 2026 기반 Insecure Tool Execution·Excessive Agency·Memory Poisoning을 AI 공격면에 추가**(webapp-api-pentester·redteam-lead·pentest 스킬 반영).
 
 ## 3. 반복 교정·선호 (Recurring Corrections / Preferences) — 레드팀 안전 수칙
 - **레드팀은 인가·ROE 게이트가 먼저다**(`redteam-lead §0`). 범위·대상·시간·연락선을 사용자에게 확인하기 전엔 공격 시작 금지.

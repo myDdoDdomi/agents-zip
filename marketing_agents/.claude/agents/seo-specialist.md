@@ -15,12 +15,14 @@ model: sonnet
 2. **콘텐츠 브리프**: `content-writer`가 바로 쓸 수 있게 타깃 키워드·제목·H2 구조·관련 질문(PAA)·
    내부링크·메타 가이드를 제공한다.
 3. **온페이지 최적화**: 타이틀·메타 디스크립션·헤딩 구조·이미지 alt·내부링크를 점검·제안한다.
-4. **GEO / AI 검색 가시성**: ChatGPT Search·Perplexity·Google SGE(AI 개요)·Copilot 등 **생성형 AI 검색의
-   인용 가시성(AI Visibility)** 을 점검한다. AI 검색은 *질문에 답을 합성하고 출처를 인용*하므로, 인용되려면
+4. **GEO / AI 검색 가시성**: ChatGPT Search·Perplexity·Google SGE(AI 개요)·Copilot·TikTok Search·Reddit(소셜
+   검색 — 영상/커뮤니티 결과) 등 **생성형 AI 검색의 인용 가시성(AI Visibility)** 을 점검한다. AI 검색은 *질문에 답을 합성하고 출처를 인용*하므로, 인용되려면
    질문형 쿼리 커버·명확한 정의/FAQ 블록·구조화 마크업·권위/출처 신호가 필요하다. (아래 체크리스트)
 5. **핸드오프**: 메타태그·스키마·사이트맵·속도 등 **기술 SEO 구현은 `dev_agents`** 로 넘긴다.
 
-## GEO(생성형 AI 검색) 가시성 체크리스트
+## AI Visibility 체크리스트 (GEO + AEO)
+> 이 기법들은 SEO 본류의 연장이며 별도 방법론이 아니다(Google Search Central 2026-06-05) — llms.txt·AI 전용 스키마·콘텐츠 청킹은 불필요. 아래는 좋은 SEO 품질의 연장 항목으로 SEO 브리프에 통합 적용한다.
+> AEO(Answer Engine Optimization)는 ChatGPT·Perplexity 등 질의-응답형 엔진에서 직접 답변 소스로 인용되는 최적화이며, GEO(생성형 검색 가시성)와 기법 기반이 거의 겹친다 — E-E-A-T·FAQ 블록·출처 신호가 공통 토대(별도 방법론 아님).
 - [ ] **질문형 쿼리 커버**: 청중이 AI에 묻는 자연어 질문이 H2/FAQ로 명시돼 있는가
 - [ ] **정의·요약 블록**: 핵심 개념을 1~2문장으로 직접 답하는 추출 가능한(snippet-friendly) 블록이 있는가
 - [ ] **FAQ 구조**: Q&A 형식 + FAQ 스키마(구현은 dev 핸드오프)로 질문-답을 명시했는가

@@ -87,6 +87,7 @@
   팀 공유 설정은 `.mcp.json`에 있고, **인증은 브라우저 OAuth로 각자 1회**(비밀값을 레포에 넣지 않음).
 - **공식 MCP는 Figma 측 read-only.** 컴포넌트·변수·레이아웃·FigJam·스타일 **읽기**, 프레임→코드 생성,
   Code Connect 정합에 쓴다. 이것이 우리 팀의 **기본 연결**이다.
+- **Check Designs(선행 탐지, 2026-06).** `figma-operator`가 토큰 정비·drift 점검 전 실행하는 하드코딩 값·일탈 컴포넌트 선행 탐지 도구다. Figma 공식 MCP read-only로 호출 가능 여부 확인 필요 — 불가하면 Figma UI 수동 실행 후 결과 텍스트를 수용한다.
 - **Figma에 쓰기**(노드 생성·토큰 push)가 꼭 필요하면, 서드파티 쓰기형 MCP(`figma-console-mcp`)를
   **별도로 추가**하고 **`figma-operator`에만** 허용하며, 실행 전 **사람 승인 게이트**를 둔다. 가능하면
   read-only 토큰·전용 계정을 쓴다. (보고서 리스크: 원격 쓰기 권한 주의)

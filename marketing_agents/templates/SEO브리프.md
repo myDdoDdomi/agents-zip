@@ -30,6 +30,7 @@
 ## 5. AI Visibility (생성형 AI 검색 / GEO)
 
 > ChatGPT Search·Perplexity·Google SGE(AI 개요)·Copilot 인용 가시성. ※ 인용 노출 지표는 미정착 → `(추정)` 표기.
+> Google 공식(Google Search Central 2026-06-05): AEO(Answer Engine Optimization, 질의응답 엔진 직접 인용 최적화)·GEO(생성형 AI 검색 가시성)는 SEO 별도 방법론이 아니며 llms.txt·AI 전용 스키마는 불필요. 이 섹션은 기존 SEO 품질(E-E-A-T·구조·질문 커버)의 연장 항목이다.
 
 | 항목 | 가이드 |
 |---|---|

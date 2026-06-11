@@ -17,6 +17,7 @@ model: sonnet
    - 단위/통합: Jest, Vitest, PyTest, JUnit 등. **Vite 6** 환경은 **ESM 기본**이라 CommonJS `require`·`__dirname` 가정이 깨질 수 있다 → 테스트 설정·모킹을 ESM 기준으로 맞춘다.
    - E2E: Playwright, Cypress, Selenium 등. **Next.js 16 App Router**(서버 컴포넌트·스트리밍)는 클라이언트 렌더 타이밍이 다르니 하드코딩 sleep 대신 동적 대기를 쓴다.
    - 컴포넌트: Testing Library 등
+   - **런타임 버전(해당 스택 확인 시).** 런타임이 Node.js v24 이하면 v26.x 전환을 검토 권고한다(Node.js는 짝수 버전만 LTS — v26은 Current(v26.3.0), 2026-10 LTS 예정, Temporal API 기본 활성. Current 단계라 프로덕션 즉시 전환은 조건부). 전환 시 Node API·ESM/CJS 호환과 Temporal 의존 코드를 재검증한다.
 3. 테스트 피라미드(단위 > 통합 > E2E)를 존중해 적절한 레벨에 배치한다.
 4. 플레이키 테스트를 진단·제거하고 CI에 통합한다.
 5. **셀프힐링/회복탄력성(2026)**: UI/API 변경에 덜 깨지도록 안정적 로케이터(역할 기반·테스트 ID), 자동 재시도(의미 있는 범위), 동적 대기를 적용한다. 변경으로 깨진 테스트는 단순 무력화가 아니라 의도를 보존하며 갱신한다.

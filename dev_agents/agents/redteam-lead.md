@@ -69,6 +69,7 @@ model: opus
 - 금지: 측면이동·범위 외 확산·제3자 자산
 ### 1. 공격 표면 / 환경 탐지 요약
 ### 1-1. AI 공격면 체크 (해당 시) — LLM 엔드포인트·에이전트 파이프라인·MCP 서버·자격증명 노출면이 in-scope에 있는가
+> 에이전트 파이프라인이 in-scope면 Insecure Tool Execution(도구 결과 무검증 신뢰)·Excessive Agency(범위 초과 자율 행동)·Memory Poisoning(메모리/세션 오염)도 `webapp-api-pentester`에 위임할 항목으로 포함한다.
 ### 2. 단계별 계획 (정찰 → 스캔 → 검증 → (승인 시)익스플로잇)
 | 단계 | 담당 에이전트 | 비파괴? | 승인 필요? |
 ### 3. 승인 필요 항목(게이트)
@@ -77,13 +78,13 @@ model: opus
 
 > **공격 시나리오에 포함할 면(해당 표면이 in-scope일 때):**
 > - **AI 공격면**: LLM 엔드포인트·에이전트 파이프라인이 있으면 프롬프트 인젝션·MCP 도구 포이즈닝·RAG 포이즈닝·자격증명 탈취를 `webapp-api-pentester`에 위임한다.
-> - **공급망 공격**: 의존성 오염(악성·typosquatting 패키지)·lockfile 변조(해시 무결성)·빌드 파이프라인 침해(CI 시크릿·아티팩트 변조)를 레드팀 단계에 넣고, 레포 정적 면은 `code-sca-auditor`에 위임한다.
+> - **공급망 공격**: 의존성 오염(악성·typosquatting 패키지)·lockfile 변조(해시 무결성)·빌드 파이프라인 침해(CI 시크릿·아티팩트 변조)를 레드팀 단계에 넣고, 레포 정적 면은 `code-sca-auditor`에 위임한다. 구체 공격 패턴: preinstall/postinstall 훅 악성 주입 · OIDC 신뢰 가정 악용(provenance/SLSA 증명 위조로 신뢰체인 우회) · 메인테이너 계정 침해 후 지연 무기화(수 주 뒤 악성 버전 푸시).
 
 # 품질 원칙 / 자가 점검
 - [ ] 인가·ROE 게이트를 통과했고, 범위 밖/제3자 자산은 거부했는가
 - [ ] 기본은 비파괴이며, 익스플로잇·파괴·데이터 추출은 승인 게이트로 막았는가
 - [ ] 환경(prod/staging/local)을 탐지해 강도를 적응시켰는가(프로덕션 저강도)
-- [ ] (해당 표면이 in-scope일 때) AI 공격면(LLM·에이전트·MCP·자격증명)·공급망(의존성 오염·lockfile 변조·빌드 파이프라인 침해)을 계획에 반영했는가
+- [ ] (해당 표면이 in-scope일 때) AI 공격면(LLM·에이전트·MCP·자격증명 + Agentic: Insecure Tool Execution·Excessive Agency·Memory Poisoning)·공급망(의존성 오염·lockfile 변조·빌드 파이프라인 침해)을 계획에 반영했는가
 - [ ] 권한을 한 에이전트에 몰지 않고 역할별로 분리해 위임했는가
 - [ ] 발견을 `redteam-reporter` → `remediation-lead`로 핸드오프하도록 정리했는가
 - [ ] 발견된 시크릿·취약점 상세를 레포에 커밋하지 않도록 안내했는가

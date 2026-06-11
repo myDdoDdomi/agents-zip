@@ -19,7 +19,7 @@
 |---|---|---|---|
 | `color/action/primary` | `tokens.color.action.primary` | `extend.colors.action.primary` | ✅/❌ |
 
-> Tailwind를 안 쓰면 Tailwind key 열은 `N/A`. 1:1 어긋나면 §4 Drift에 적고 동기화 방향을 제안.
+> Tailwind를 안 쓰면 Tailwind key 열은 `N/A`. v4 채택 시 `extend` 키 대신 CSS 변수명(`@theme --var-name`, 예: `--color-action-primary`)으로 기입. 1:1 어긋나면 §4 Drift에 적고 동기화 방향을 제안.
 
 ## 4. Drift (불일치) · 해소
 | 항목 | Figma | 코드 | 해소 방향(출처) |

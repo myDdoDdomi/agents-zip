@@ -30,11 +30,14 @@ model: opus
    사용/금지 원칙, 토큰 매핑을 정리한다.
 3. Figma 변수와 불일치(drift)가 있으면 표로 차이를 적고, 동기화 방향(어느 쪽이 출처인지)을 제안한다.
    Figma에 토큰을 **push(쓰기)** 해야 하면 `figma-operator`에 위임하고 **사람 승인**을 받는다.
-4. **Figma Variables ↔ Tailwind config 1:1 정합**: 코드가 Tailwind를 쓰면, 시맨틱 토큰 이름이
-   `tailwind.config` `theme.extend` 키와 **1:1로 대응**되게 맞춘다(예: Figma 변수 `color/action/primary`
-   ↔ `extend.colors.action.primary`). 토큰 표에 **drift 점검 열**(Tailwind config 키 · 일치 여부)을 둬
-   이름·값 어긋남을 잡는다. 어긋나면 출처(어느 쪽 기준)와 동기화 방향을 제안한다. 모드별 값은
-   다크모드 전략(`class`/`media` + CSS 변수)에 맞춰 어떻게 노출되는지도 적는다. `(확인 필요: 실제 config 키는 소스 기준)`
+4. **Figma Variables ↔ Tailwind 1:1 정합** (코드가 Tailwind를 쓸 때 — 프로젝트의 Tailwind 버전을 먼저 확인):
+   - **(Tailwind v3 이하)** 시맨틱 토큰 이름이 `tailwind.config` `theme.extend` 키와 **1:1로 대응**되게 맞춘다
+     (예: Figma 변수 `color/action/primary` ↔ `extend.colors.action.primary`).
+   - **(Tailwind v4 채택 시)** JS config(`tailwind.config`) 폐기 — CSS `@theme` 지시어 내 **CSS 변수**로 네이티브 매핑한다
+     (예: `@theme { --color-action-primary: …; }`). 시맨틱 토큰 이름 ↔ CSS 변수명(`--color-action-primary`)이 **1:1**인지 점검한다.
+   - 토큰 표에 **drift 점검 열**(v3: Tailwind config 키 / v4: CSS 변수명 · 일치 여부)을 둬 이름·값 어긋남을 잡는다.
+     어긋나면 출처(어느 쪽 기준)와 동기화 방향을 제안한다. 모드별 값은 다크모드 전략(`class`/`media` + CSS 변수)에
+     맞춰 어떻게 노출되는지도 적는다. `(확인 필요: 실제 config 키/CSS 변수명·Tailwind 버전은 소스 기준)`
 
 ## 산출 규칙
 - 한국어. 토큰 이름은 영문 kebab/dot 표기로 일관. 값은 명시(추측 금지, 불명확은 `(확인 필요)`).
@@ -52,6 +55,7 @@ model: opus
 - [ ] 기존 Figma 변수/코드 토큰을 재사용했는가(중복 신설 아님)
 - [ ] 토큰이 원시→의미→컴포넌트 계층으로 정리됐는가
 - [ ] 시맨틱 색 토큰이 `.light`/`.dark` 쌍으로 정의됐고, 대비비를 라이트·다크 각각 검증했는가
-- [ ] (Tailwind 사용 시) 시맨틱 토큰 이름이 Tailwind config `extend` 키와 1:1 대응되고, drift 점검 열을 채웠는가
+- [ ] (Tailwind v3 이하 사용 시) 시맨틱 토큰 이름이 Tailwind config `extend` 키와 1:1 대응되고, drift 점검 열을 채웠는가
+- [ ] (Tailwind v4 채택 시) JS config 대신 `@theme` CSS 변수(`--color-…`)로 매핑하고, 토큰 이름↔CSS 변수명 1:1 점검·drift 열을 채웠는가
 - [ ] (기존 공유 컴포넌트 수정 시) 전체 재작성 대신 diff-aware 최소 변경을 했고, 기존 prop/emit/slot·주요 로직(반응형 분기 등)을 보존했는가
 - [ ] Figma와의 drift·동기화 방향이 명시됐는가

@@ -19,6 +19,14 @@ docs_agents_history_backup.bundle
 *.tmp
 gstack.json
 
+# === 프로젝트 작업 산출물 — 원본은 Drive/개인 자산, 본부 레포 비커밋 ===
+/docs_agents/research/
+/docs_agents/동행*
+/docs_agents/(구)*
+/docs_agents/*.xlsx
+# 프로젝트 문서 검수 산출물(팀 피드백 보고서 아님)도 비커밋
+/feedback/*검수*
+
 # === edu_agents — 별도 repo로 관리, 본부 레포 비커밋 ===
 /edu_agents/
 

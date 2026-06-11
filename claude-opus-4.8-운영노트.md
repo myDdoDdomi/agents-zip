@@ -13,10 +13,15 @@
 | **Opus** | `opus` | `claude-opus-4-8` | 1M | 128K | $5 / $25 |
 | **Sonnet** | `sonnet` | `claude-sonnet-4-6` | 1M | 64K | $3 / $15 |
 | **Haiku** | `haiku` | `claude-haiku-4-5` | 200K | 64K | $1 / $5 |
+| **Fable 5 / Mythos 5** (참조용 신규 라인) | `fable`=`claude-fable-5` (선택적) | — | — | — | $10 / $25 (Mythos Preview 출력 $50 대비 절반) |
 
 - 에이전트 `model:`은 **별칭**(`opus`/`sonnet`/`haiku`/`inherit`)으로 둔다. **모델 ID를 하드코딩하지 않는다** — Claude Code가
   현행 버전으로 해석하므로, 다음 모델이 나와도 정의를 안 고쳐도 된다.
 - Opus 4.8는 **1M 컨텍스트를 추가요금 없이** 제공한다. Claude Code에서 **Fast 모드**(`/fast`)를 지원한다(같은 Opus, 출력만 빠름).
+- **Claude Fable 5·Mythos 5 GA(2026-06-09).** SW엔지니어링·지식노동·비전에 강점. 고위험(사이버·생물·화학) 응답은 **Opus 4.8로 폴백**.
+  별칭 매핑은 **기존대로 유지**(opus=`claude-opus-4-8`, sonnet=`claude-sonnet-4-6`, haiku=`claude-haiku-4-5`) — 위 표의 신규 라인은 **참조용**이며
+  전 팀 에이전트 `model:` 재배정은 보류(보수적 기본값). 신모델 상시 채택 필요성이 생기면 이 라인업 기준으로 재검토한다.
+- **Fable 5 구독 정책:** 구독 플랜 무료 포함은 2026-06-22까지, 6-23부터 Usage Credits 차감.
 
 ## 2. 사고(thinking)·effort — Claude Code
 
