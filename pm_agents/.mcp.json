@@ -1,0 +1,22 @@
+{
+  "$comment": "pm_agents 팀 공유 MCP. Atlassian(Jira)·GitHub·Slack 공식 원격 MCP. Atlassian/GitHub은 순수 OAuth(비밀값 없음, 브라우저 1회). Slack은 Confidential OAuth라 client_id/client_secret이 필요 — 비밀값이므로 ${SLACK_CLIENT_ID}/${SLACK_CLIENT_SECRET} 환경변수로 치환하고 레포에 커밋하지 않는다(.gitignore의 .env·*.local.json·client_secret*.json). 서버 키 'atlassian'(Jira)/'github'(추적성)/'slack' → 도구명 mcp__atlassian__*/mcp__github__*/mcp__slack__*. Jira: 읽기 자유 + 쓰기는 jira-writer만(승인 게이트). GitHub: 읽기 전용(git-traceability만). Slack: 읽기는 slack-capture(+notifier 일부), 게시(외부 발신)는 slack-notifier만(HITL 승인 = Jira 쓰기와 동일 게이트). 실제 노출 도구는 /mcp로 1회 확인 후 frontmatter 미세조정. 가이드: docs/ATLASSIAN-MCP.md · docs/GITHUB-MCP.md · docs/SLACK-MCP.md",
+  "mcpServers": {
+    "atlassian": {
+      "type": "sse",
+      "url": "https://mcp.atlassian.com/v1/sse",
+      "$comment": "Atlassian 공식 원격 MCP(SSE, OAuth). 최초 호출 시 브라우저로 Atlassian 로그인·권한 동의 1회 → 토큰은 Claude Code가 관리(레포 비저장). 도구명 접두사는 mcp__atlassian__. 읽기 도구는 모든 PM 에이전트에, 쓰기 도구(createJiraIssue/editJiraIssue/addCommentToJiraIssue/transitionJiraIssue/addWorklogToJiraIssue)는 jira-writer에만 부여한다. 외부 MCP 신뢰 전 도구 description/스키마 무결성 점검 권장(도구 포이즈닝 방어)."
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "$comment": "GitHub 공식 원격 MCP(HTTP, OAuth — PAT 불필요). dev_agents와 동일한 키·transport·URL을 차용(일관성). 추적성(Epic/Story/Task↔커밋/PR) 분석용으로 git-traceability에만 '읽기 도구'를 부여한다(PR/커밋/브랜치/이슈·코드 조회). GitHub 쓰기(PR/브랜치 생성 등)는 이번 범위 아님 → 부여 금지. 실제 읽기 도구명은 서버 버전에 따라 가감될 수 있어 /mcp로 1회 확인 후 git-traceability의 tools를 미세조정. 가이드: docs/GITHUB-MCP.md"
+    },
+    "slack": {
+      "type": "http",
+      "url": "https://mcp.slack.com/mcp",
+      "client_id": "${SLACK_CLIENT_ID}",
+      "client_secret": "${SLACK_CLIENT_SECRET}",
+      "$comment": "Slack 공식 원격 MCP(JSON-RPC 2.0 over Streamable HTTP). ⚠️ Atlassian/GitHub의 순수 OAuth와 달리 Confidential OAuth라 app client_id + client_secret이 필요하다 — client_secret은 비밀값이므로 ${SLACK_CLIENT_ID}/${SLACK_CLIENT_SECRET} 환경변수로 주입하고 레포에 절대 커밋하지 않는다(.gitignore의 .env·*.local.json·client_secret*.json로 차단). OAuth 앱 생성·secret 주입 절차는 docs/SLACK-MCP.md. 도구명 접두사 mcp__slack__. 읽기 도구(search_messages_files·read_channel·read_thread 등)는 slack-capture에(+notifier 일부), 게시 도구(send_message·draft_message·create_canvas·update_canvas·add_reactions)는 slack-notifier에만 부여한다(외부 발신 = HITL 승인, Jira 쓰기와 동일 게이트). create_conversation(채널 생성)은 1차 제외. 외부 MCP 신뢰 전 도구 description/스키마 무결성 점검 권장(도구 포이즈닝 방어). 실제 노출 도구는 /mcp로 1회 확인 후 frontmatter 미세조정."
+    }
+  }
+}

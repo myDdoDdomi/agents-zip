@@ -1,0 +1,22 @@
+{
+  "$comment": "aiot_agents 팀 공유 MCP. (1) Context7 — read-only 문서 조회 MCP. SoC/RTOS/SDK/클라우드 IoT SDK/프로토콜 스택의 최신 API·문서를 조회한다(외부 변경 없음). 무료 조회는 키 없이도 동작하며, 레이트리밋 상향이 필요하면 CONTEXT7_API_KEY를 환경변수로 주입(비밀값은 레포에 넣지 말 것 — ${VAR} 자동치환). (2) github(선택, 기본 비활성 주석) — 레퍼런스 펌웨어/드라이버/예제 레포를 '읽기 근거'로만 참조. 공식 원격 HTTP MCP는 DCR 미지원이라 fine-grained PAT를 GITHUB_PAT 환경변수로 주입(읽기 전용 권장: Contents/Metadata=Read-only). 쓰기(이슈/PR/머지) 작업은 하지 않는다. 토큰·디바이스 키·인증서는 절대 레포에 넣지 말 것.",
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    }
+  },
+  "$github_optional": {
+    "$note": "GitHub 레퍼런스 레포 읽기가 필요하면 아래를 mcpServers로 옮겨 활성화한다. PAT는 읽기 전용 권장, ${GITHUB_PAT}로 주입.",
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# === 비밀값/인증정보 — 절대 커밋 금지 ===
+.env
+.env.*
+*.local
+*.local.json
+.claude/settings.local.json
+*token*.json
+*.pem
+*.key
+*.crt
+*.p12
+client_secret*
+
+# === 디바이스/펌웨어 빌드 산출물·로컬 작업물 ===
+/_drafts/
+*.tmp
+*.bin
+*.elf
+*.hex
+build/
+.pio/
+
+# === OS / 에디터 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
