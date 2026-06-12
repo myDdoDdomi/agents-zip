@@ -11,6 +11,10 @@
 { "mcpServers": { "figma": { "type": "http", "url": "https://mcp.figma.com/mcp" } } }
 ```
 
+> ⚠️ **`.mcp.json`은 에이전트가 생성·수정하지 못할 수 있다**(Claude Code 권한 게이트 차단 — 실사례
+> 2026-06-11 조립 프로젝트). 다른 프로젝트에 figma 서버 블록을 추가할 때는 에이전트가 위 JSON을
+> 제시하고 **사용자가 직접 붙여넣거나**, 아래 `claude mcp add` 명령을 **사용자가 직접 실행**합니다.
+
 직접 추가하려면(개인 전역):
 
 ```bash

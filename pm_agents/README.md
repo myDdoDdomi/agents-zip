@@ -130,6 +130,11 @@ irm https://claude.ai/install.ps1 | iex
 
 ## 🤝 다른 팀과 함께 쓰기 (멀티팀 조립)
 
+> **에이전트만 복사해도 됩니다(자동 포트):** `대상/.claude/agents/<팀>/`에 에이전트만 복사하고 `/team-assemble`를
+> 실행하면, 아래 수동 복사 단계(스킬·템플릿·참조 문서·`.mcp.json` 병합)는 스킬이 **본부 레포에서 자동으로
+> 가져옵니다**(같은 머신에 본부 레포가 있을 때 — 경로는 1회만 물음, SKILL §2-1b). **환경변수 설정·브라우저 OAuth
+> 1회 인증만 직접** 하면 됩니다. 본부 레포가 없는 환경에서는 아래 수동 절차를 그대로 따르세요.
+
 이 PM팀을 **개발(dev)·QA·문서 등 다른 팀과 한 프로젝트에서 같이** 쓰고 싶을 때 읽으세요.
 (PM팀만 혼자 쓸 거면 — 이 `pm_agents` 폴더를 그냥 직접 열면 됩니다. 조립은 필요 없어요.)
 
@@ -203,7 +208,7 @@ PM팀의 `.mcp.json`에는 **Atlassian(Jira)** · **GitHub(추적성, 읽기 전
 
 ### 🔌 MCP / 권한 (요약)
 
-- **Atlassian 공식 원격 MCP**(`https://mcp.atlassian.com/v1/sse`, OAuth — 비밀값 없음). 서버 키 `atlassian` → 도구명 `mcp__atlassian__*`.
+- **Atlassian 공식 원격 MCP**(`https://mcp.atlassian.com/v1/mcp`, Streamable HTTP·OAuth — 비밀값 없음. 구 `/v1/sse`는 2026-06-30 이후 지원 종료). 서버 키 `atlassian` → 도구명 `mcp__atlassian__*`.
 - **읽기 도구는 모든 PM 에이전트**에, **쓰기 도구 5종은 `jira-writer`에만**(승인 게이트 통과 후). → `docs/ATLASSIAN-MCP.md`
 - **GitHub 공식 원격 MCP**(`https://api.githubcopilot.com/mcp/`, `http`, OAuth — PAT 불필요, dev_agents와 동일). 서버 키 `github` → 도구명 `mcp__github__*`.
   **읽기 전용**으로 `git-traceability` 한 역할에만(추적성). GitHub 쓰기는 미부여(이번 범위 아님). git 출처 Jira 갱신도 동일 승인 게이트. → `docs/GITHUB-MCP.md`

@@ -29,6 +29,19 @@ Atlassian·GitHub 원격 MCP는 **순수 OAuth(비밀값 없음)** 라 `.mcp.jso
   포함돼 있어 secret 파일이 커밋되지 않도록 차단돼 있습니다(확인됨).
 - **금지:** `client_secret` 실제 값을 `.mcp.json`·`MEMORY.md`·커밋·로그에 넣지 않습니다.
 
+> ⚠️ **`.mcp.json`은 에이전트가 생성·수정하지 못할 수 있다**(Claude Code 권한 게이트 차단 — 실사례
+> 2026-06-11, 2회). 위 블록은 에이전트가 완성 JSON으로 제시하고 **사용자가 직접** `.mcp.json`에 붙여넣습니다.
+
+## 3-0. ⚠️ 무료 플랜·비관리자 환경 주의 — Confidential OAuth가 불가할 수 있다
+
+- 워크스페이스 **관리자 권한이 없거나**, 무료 플랜의 **앱 설치 한도(10개)** 에 도달했으면 Confidential OAuth
+  앱(client_id·client_secret) 생성·설치가 불가하다 — 이때 MCP `authenticate`는 "dynamic client registration
+  미지원" 류 오류를 반환한다(실사례 2026-06-11).
+- 이 환경에서는 `slack-notifier`·`slack-capture`가 **MCP로는 동작하지 않는다** → §9 폴백으로 운영한다:
+  게시는 **복붙용 메시지 본문 제공**(사용자가 직접 게시), 캡처는 **사용자가 붙여넣은 대화 텍스트** 입력.
+- 관리자에게 앱 승인·한도 정리를 요청하거나 플랜 전환 전까지는 **폴백이 기본 모드**다 — 매번 OAuth를
+  재시도하지 않는다.
+
 ## 3. OAuth 앱 생성 · secret 주입 절차
 1. **Slack 앱 생성:** Slack API(api.slack.com)에서 워크스페이스용 앱을 만들고, MCP 연동에 필요한
    읽기/게시 스코프(채널 읽기·메시지 게시·Canvas 등 — 실제 필요한 최소 스코프만)를 부여합니다. `(스코프 상세는 워크스페이스 정책에 따라 확인 필요)`

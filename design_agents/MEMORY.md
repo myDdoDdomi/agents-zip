@@ -7,7 +7,8 @@
 > **언제 적나:** 같은 실수 2회 · 환경/도구 특이사항 · 매 세션 다시 설명하게 되는 것 · `/feedback-agents` 회고에서 즉시 재사용 가능한 학습.
 
 ## 1. 검증된 함정·우회법 (Gotchas & Workarounds)
-- (아직 누적된 학습 없음 — 작업하며 채움)
+- [2026-06-11 조립 회고] **`.mcp.json`은 에이전트가 생성·수정하지 못할 수 있다**(Claude Code 권한 게이트 차단) — figma 서버 블록 추가는 완성 JSON 제시 + 사용자 직접 붙여넣기(또는 사용자가 `claude mcp add` 실행). (`docs/FIGMA-MCP.md` §1)
+- [2026-06-11 조립 회고] **조립 프로젝트 안의 유사 명칭 폴더는 HQ가 아니다** — 예: 어떤 프로젝트의 `dev\design_agents`는 그 프로젝트 전용 구버전. 재조립(/team-assemble) 원본은 항상 HQ 레포(`team-agents/design_agents`)에서 가져온다(구버전 오조립 = 기능·정책 불일치).
 
 ## 2. 환경·프로젝트 매핑 (Env & Project Mapping)
 - MCP: **Figma 공식 MCP**로 디자인 추출·디자인-코드 정합 확인.

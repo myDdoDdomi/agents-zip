@@ -25,7 +25,9 @@ model: sonnet
 
 # 작업 워크플로우
 1. `templates/백로그정리.md` 구조를 사용한다. 대상 프로젝트/필터를 확인(모호하면 1~2개 질문).
-2. JQL로 백로그 이슈를 조회(예: `project = ABC AND statusCategory != Done AND sprint is EMPTY`).
+2. JQL로 백로그 이슈를 조회(예: `project = ABC AND statusCategory != Done AND sprint is EMPTY`). 이슈타입
+   표시명이 현지어(`에픽`·`스토리` 등)인 사이트면 영어 타입명 JQL이 0건이 된다 — 메타로 표시명 확인 후
+   조회(`docs/ATLASSIAN-MCP.md` §3-1).
 3. 중복·우선순위·세분화·누락을 진단하고, 각 항목을 **`현재 → 제안 + 근거`** 표로 정리한다.
 4. 쓰기로 이어질 수 있는 제안은 "쓰기 후보" 섹션에 모아 `jira-writer` 승인 게이트로 넘길 수 있게 한다.
 

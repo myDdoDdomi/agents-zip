@@ -2,9 +2,9 @@
   "$comment": "pm_agents 팀 공유 MCP. Atlassian(Jira)·GitHub·Slack 공식 원격 MCP. Atlassian/GitHub은 순수 OAuth(비밀값 없음, 브라우저 1회). Slack은 Confidential OAuth라 client_id/client_secret이 필요 — 비밀값이므로 ${SLACK_CLIENT_ID}/${SLACK_CLIENT_SECRET} 환경변수로 치환하고 레포에 커밋하지 않는다(.gitignore의 .env·*.local.json·client_secret*.json). 서버 키 'atlassian'(Jira)/'github'(추적성)/'slack' → 도구명 mcp__atlassian__*/mcp__github__*/mcp__slack__*. Jira: 읽기 자유 + 쓰기는 jira-writer만(승인 게이트). GitHub: 읽기 전용(git-traceability만). Slack: 읽기는 slack-capture(+notifier 일부), 게시(외부 발신)는 slack-notifier만(HITL 승인 = Jira 쓰기와 동일 게이트). 실제 노출 도구는 /mcp로 1회 확인 후 frontmatter 미세조정. 가이드: docs/ATLASSIAN-MCP.md · docs/GITHUB-MCP.md · docs/SLACK-MCP.md",
   "mcpServers": {
     "atlassian": {
-      "type": "sse",
-      "url": "https://mcp.atlassian.com/v1/sse",
-      "$comment": "Atlassian 공식 원격 MCP(SSE, OAuth). 최초 호출 시 브라우저로 Atlassian 로그인·권한 동의 1회 → 토큰은 Claude Code가 관리(레포 비저장). 도구명 접두사는 mcp__atlassian__. 읽기 도구는 모든 PM 에이전트에, 쓰기 도구(createJiraIssue/editJiraIssue/addCommentToJiraIssue/transitionJiraIssue/addWorklogToJiraIssue)는 jira-writer에만 부여한다. 외부 MCP 신뢰 전 도구 description/스키마 무결성 점검 권장(도구 포이즈닝 방어)."
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "$comment": "Atlassian 공식 원격 MCP(Streamable HTTP, OAuth). 구 SSE 엔드포인트(/v1/sse, type: sse)는 2026-06-30 이후 지원 종료(Atlassian 공식 문서, 2026-06-11 검증) → /v1/mcp(type: http)로 이행함. 최초 호출 시 브라우저로 Atlassian 로그인·권한 동의 1회 → 토큰은 Claude Code가 관리(레포 비저장). 도구명 접두사는 mcp__atlassian__. 읽기 도구는 모든 PM 에이전트에, 쓰기 도구(createJiraIssue/editJiraIssue/addCommentToJiraIssue/transitionJiraIssue/addWorklogToJiraIssue)는 jira-writer에만 부여한다. 외부 MCP 신뢰 전 도구 description/스키마 무결성 점검 권장(도구 포이즈닝 방어)."
     },
     "github": {
       "type": "http",

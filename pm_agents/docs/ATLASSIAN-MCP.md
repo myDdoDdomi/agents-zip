@@ -4,9 +4,16 @@
 들어가지 않습니다(OAuth, 브라우저 1회 인증).
 
 ## 1. 연결 정보
-- **서버 URL:** `https://mcp.atlassian.com/v1/sse` (SSE, OAuth)
+- **서버 URL:** `https://mcp.atlassian.com/v1/mcp` (**Streamable HTTP**, OAuth → `.mcp.json` `type: http`)
+  - 구 SSE 엔드포인트 `https://mcp.atlassian.com/v1/sse`는 **2026-06-30 이후 지원 종료**(Atlassian 공식 문서,
+    2026-06-11 검증) — 기존 설정이 `/v1/sse`(type: sse)면 `/v1/mcp`(type: http)로 바꾼다.
 - **`.mcp.json` 서버 키:** `atlassian` → Claude Code 도구명 접두사 `mcp__atlassian__`
 - **인증:** 최초 호출 시 브라우저로 Atlassian 로그인·권한 동의 1회. 토큰은 Claude Code가 관리(레포 비저장).
+
+> ⚠️ **`.mcp.json`은 에이전트가 생성·수정하지 못할 수 있다.** Claude Code 권한 게이트가 MCP 설정 파일
+> 편집을 차단한 사례가 반복 확인됐다(2026-06-11 조립 프로젝트, 2회). 새 프로젝트에 이 서버를 붙일 때는
+> 에이전트가 **완성된 JSON 블록을 제시**하고, **사용자가 직접 `.mcp.json`을 작성** + 브라우저 OAuth 1회
+> 인증을 한다.
 
 ## 2. 인증 확인
 - 폴더를 Claude Code로 연 뒤 `/mcp`를 입력해 `atlassian` 서버가 연결됐는지, 어떤 도구가 노출되는지 확인합니다.
@@ -42,6 +49,22 @@
 | `mcp__atlassian__addWorklogToJiraIssue` | 워크로그 추가 |
 
 > **모든 쓰기는 승인 게이트(`docs/WRITE-GATE.md`) 통과 후에만** 호출합니다.
+
+## 3-1. JQL 주의 — 이슈타입·상태 표시명은 사이트 언어에 따라 현지어일 수 있다
+
+- 사이트/프로젝트 언어 설정에 따라 이슈타입·상태 표시명이 한국어 등 현지어다(예: `에픽`·`스토리`·`하위 작업`).
+  이때 `issuetype = Epic`·`issuetype = Story` 같은 영어 JQL은 **에러가 아니라 0건을 반환**한다 — "이슈가
+  없다"로 오인하기 쉽다(실사례 2026-06-11).
+- **0건이면 "없음"으로 단정하기 전에** `getJiraProjectIssueTypesMetadata`로 실제 표시명을 확인하고 재조회한다
+  (예: `issuetype = 에픽`). 확인된 표시명은 `MEMORY.md` §2(환경 매핑)에 기록해 재확인 비용을 없앤다.
+
+## 3-2. 대량 JQL 조회 패턴 — 응답 토큰 초과 방지
+
+`searchJiraIssuesUsingJql` 결과가 크면 응답이 토큰 한도를 초과해 파싱에 실패할 수 있다(실사례 2026-06-11).
+대량 조회는:
+1. `fields` 파라미터로 필요한 필드만 제한하고 `maxResults`를 줄인다.
+2. `startAt` 페이지네이션으로 분할 조회해 집계한다.
+3. 그래도 크면 결과를 파일로 저장한 뒤 파싱한다(예: PowerShell `ConvertFrom-Json`).
 
 ## 4. 1차 범위 / 후속 확장
 - **1차: Jira만 와이어링.** Confluence는 **읽기 도구만** 분석 보강용으로 일부 에이전트에 포함했습니다.
