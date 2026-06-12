@@ -125,8 +125,9 @@
 
 - **우리는** AIoT *설계·참조 구현*을 만든다. **양산 구현·정식 검증·정식 문서화**는 위 팀으로 넘기거나 조립한다.
 - **멀티팀 조립:** AIoT 설계 → 개발(양산) → QA를 **한 프로젝트에서 함께** 쓰려면 본부 `/team-assemble`로
-  조립한다. 우리 팀(모델 A)은 **에이전트 + 스킬 + `templates/` + `.mcp.json` 4종을 함께 이식**해야 자기완결로
-  동작한다(`dev_agents`·`QA_agents`는 `agents/*.md`만 복사). 근거·절차: 루트 `CLAUDE.md` §2-C. (→ README "다른 팀과 함께 쓰기")
+  조립한다. 우리 팀(모델 A)은 **에이전트만 `대상/.claude/agents/aiot/`로 복사**하면 되고, 동반 자산(스킬·
+  `templates/`·`.mcp.json` 병합)은 `/team-assemble`가 본부 레포에서 자동 포트한다(SKILL §2-1b — 환경변수·인증만
+  수동, 본부 레포 없으면 4종 수동 이식). `dev_agents`·`QA_agents`는 `agents/*.md`만 복사. 근거·절차: 루트 `CLAUDE.md` §2-C. (→ README "다른 팀과 함께 쓰기")
 
 ## 8. 품질 게이트 (AIoT 산출물 통과 조건)
 

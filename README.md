@@ -43,18 +43,28 @@ irm https://claude.ai/install.ps1 | iex
 - **각 `<부서>_agents/CLAUDE.md` = 부서 그룹장** — 그 부서 안에서 에이전트를 *지휘*.
 - **[`.claude/agents/team-architect.md`] = 팀 빌더(팩토리)** — 새 부서 팀을 표준에 맞게 설계·생성.
 
+**본부 유틸리티(부서 팀 아님):**
+- **`/update-agents`** — IT 트렌드를 리서치해 관련 팀을 디벨롭하는 자기개선 파이프라인(`trend-researcher`→`update-curator`→`team-fit-reviewer` 팬아웃→사람 승인 게이트→`team-architect` 적용 → `.claude/skills/update-agents/runs/`에 기록).
+- **`/tech-briefing`** — 사람이 읽는 IT 뉴스 종합 브리핑 발행(팀 수정 없음 → `briefings/`).
+- **`/team-assemble`** — 여러 팀을 한 프로젝트에 조립(아래 *멀티팀 조립* 참고).
+- 본부도 **2계층 메모리**를 운영합니다(루트 `MEMORY.md` = 자기개선 학습 누적층).
+
 ---
 
 ## 👥 현재 부서 팀
 
 | 부서 팀 | 무엇을 하나 | 배포 모델 | 사용법 |
 |---|---|---|---|
-| [`docs_agents`](docs_agents/) | 레퍼런스 리서치·인사이트 분석·기획·개발 문서 작성·검수·Google Drive/Sheets 반영·Calendar 일정·일정계획(간트·칸반)·요구 인터뷰·다관점 심화검수 (17 에이전트 + 24 슬래시 스킬) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
-| [`QA_agents`](QA_agents/) | 테스트 전략·케이스 설계·자동화·API·성능·보안·접근성·모바일·회귀·트리아지 (13 에이전트) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
-| [`design_agents`](design_agents/) | 아이데이션·디자인 토큰/시스템·Figma 추출·접근성·디자인-코드 정합 (7 에이전트 + 8 스킬, Figma 공식 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| [`docs_agents`](docs_agents/) | 레퍼런스 리서치·인사이트 분석·기획·개발 문서(기능/기술명세 포함) 작성·검수·Google Drive/Sheets 반영(서식=XLSX 빌드→import)·Calendar 일정·일정계획(간트·칸반)·요구 인터뷰·다관점 심화검수·Diátaxis (17 에이전트 + 24 슬래시 스킬) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| [`QA_agents`](QA_agents/) | 테스트 전략·케이스 설계·자동화·API·성능·보안·접근성·모바일·회귀·트리아지·**디자인 정합·비주얼 리그레션** (14 에이전트) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
+| [`design_agents`](design_agents/) | 디자인 레퍼런스·트렌드 리서치(구현 레지스트리→dev 핸드오프 포함)·아이데이션·디자인 토큰/시스템·Figma 추출·접근성·디자인-코드 정합 (8 에이전트 + 9 스킬, Figma 공식 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
 | [`dev_agents`](dev_agents/) | 아키텍처·구현·코드리뷰·디버그·리팩터·마이그레이션 + **인가된 침투 테스트(레드팀)→방어(블루팀) 퍼플팀 루프** (16 에이전트 + 3 스킬, GitHub+Context7 MCP) | B. 복사-라이브러리 | `agents/*.md`를 대상 프로젝트 `.claude/agents/`로 **복사** |
-| [`marketing_agents`](marketing_agents/) | 캠페인·블로그·랜딩카피·SEO·소셜·이메일·포지셔닝 작성·검수 (8 에이전트 + 10 스킬, 빌트인 웹검색) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| [`marketing_agents`](marketing_agents/) | 캠페인·블로그·랜딩카피·SEO(GEO·AEO 포함)·소셜·이메일·포지셔닝 작성·검수 (8 에이전트 + 10 스킬, 빌트인 웹검색) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
 | [`resume_agents`](resume_agents/) | GitHub 경력·포트폴리오·지원 기업(JD) 분석을 조합한 기업 맞춤 이력서·포트폴리오 작성·검수·Drive 산출 (9 에이전트 + 9 스킬, Google Workspace(docs/drive)+GitHub 원격 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| [`aiot_agents`](aiot_agents/) | AIoT(IIoT·스마트홈·웨어러블·로보틱스) 기획·요구분석·시스템 아키텍처·프로토콜·엣지AI·펌웨어·클라우드 데이터 설계+참조 구현·디바이스 보안 위협모델(STRIDE)·검수 (9 에이전트 + 6 스킬, Context7 read-only MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| [`pm_agents`](pm_agents/) | Jira(Atlassian) 프로젝트 관리 — 현황분석·백로그·스프린트·트리아지·보고 + **쓰기는 승인 게이트(HITL) 통과 후에만** + GitHub 트레이서빌리티 + Slack 양방향(게시=HITL) (12 에이전트 + 11 스킬, Atlassian+GitHub+Slack 공식 원격 MCP) | A. 자기완결형 | 폴더를 **Claude Code로 직접 연다** |
+| `edu_agents` ※별도 repo | IT·개발 교육 교안 — 학습설계(Bloom)·본문·실습·퀴즈·도식 + 인쇄/PDF HTML 빌드·검수 (9 에이전트 + 11 스킬) | A. 자기완결형 | 별도 repo 관리(본부 레포 비커밋) |
+| `webnovel_agents` ※비커밋 | 인터뷰 기반 웹소설 창작 — 바이블·세계관·스토리나침반·인물 파일·복선원장·집필·윤문·검수·베타리드 (10 에이전트 + 13 스킬) | A. 자기완결형 | 원고=개인 자산(본부 레포 비커밋) |
 
 > **배포 모델 A** = 자기 산출물을 만드는 팀(직접 열어 사용). **B** = 기존 코드베이스 위에서 일하는 팀(복사해 사용).
 > **모든 팀**은 작업을 회고해 본부에 전달하는 피드백 보고 기능(`/feedback-agents` + `feedback-reporter` + `feedback/`)을 기본 탑재합니다(위 카운트 포함).
@@ -104,11 +114,18 @@ irm https://claude.ai/install.ps1 | iex
 ```
 → `agents/<팀>/` 폴더를 스캔해 ① **이름 충돌 자동 해결**(두 팀이 같은 `code-reviewer`를 가질 때처럼 겹치는 이름을
 `dev-code-reviewer`·`qa-code-reviewer`로 리네임. 단 공통 `feedback-reporter`는 **단일 통합 reporter로 수렴** —
-`/feedback-agents` 한 번으로 전 팀을 회고해 본부에 **통합 보고**) ② **멀티팀 오케스트레이터 `CLAUDE.md`** 생성
-(팀 인벤토리·통합 라우팅표·**팀 간 핸드오프**: 예 `design → dev → qa → dev`). 팀을 더하거나 빼면 **다시 실행만** 하면 됩니다(재실행 안전).
+`/feedback-agents` 한 번으로 전 팀을 회고해 본부에 **통합 보고**) ② **모델 A 팀의 동반 자산 자동 포트**(아래)
+③ **멀티팀 오케스트레이터 `CLAUDE.md`** 생성(팀 인벤토리·통합 라우팅표·**팀 간 핸드오프**: 예 `design → dev → qa → dev`).
+팀을 더하거나 빼면 **다시 실행만** 하면 됩니다(재실행 안전).
 
-> **모델 A 팀(docs·design 등)을 조립**할 땐 에이전트뿐 아니라 그 팀의 **스킬·`templates/`·`.mcp.json`도 함께** 옮겨야
-> 자기완결로 동작합니다(에이전트가 자기 팀 스킬·템플릿·MCP에 의존). 모델 B 팀(dev·QA)은 `agents/*.md`만 복사하면 됩니다.
+> **모델 A 팀(docs·design·pm 등)도 에이전트만 복사하면 됩니다** — `/team-assemble`가 그 팀의 **스킬·`templates/`·
+> 참조 문서(`docs/`·`config/`)·`.mcp.json` 병합**을 본부 레포에서 **자동으로 가져옵니다**(같은 머신에 본부 레포가
+> 있을 때, 경로는 1회만 물음 — SKILL §2-1b). **환경변수 설정·브라우저 OAuth 1회 인증만 수동**입니다(필요 목록은
+> 실행 후 보고에 출력). 본부 레포가 없는 환경이면 수동 복사 안내가 나옵니다. 모델 B 팀(dev·QA)은 원래 `agents/*.md`만 복사하면 됩니다.
+
+> **팀 업데이트 재배포 시:** 업데이트된 에이전트를 기존 조립 프로젝트에 다시 넣을 땐 ① 팀별 폴더에만 복사
+> ② 협업 `CLAUDE.md`는 절대 통째 덮어쓰지 않기 ③ 동명 파일은 diff 확인 후 교체 ④ `/team-assemble` 재실행 —
+> 4가지를 지키세요(SKILL §1-2 체크리스트, 실제 오배치·덮어쓰기 사고 재발 방지).
 
 > **왜 필요한가:** Claude Code는 `.claude/agents/` 하위폴더를 재귀 인식하지만 에이전트 **식별자는 `name`뿐**이라
 > 폴더가 달라도 **같은 이름은 경고 없이 하나가 사라집니다.** `/team-assemble`이 이 충돌을 풀고 협업 라우팅을 자동으로 세팅합니다.
@@ -148,14 +165,25 @@ irm https://claude.ai/install.ps1 | iex
 team-agents/
 ├── CLAUDE.md                         # 총괄 그룹장 (오케스트레이터)
 ├── README.md                         # (이 파일)
+├── MEMORY.md                         # 본부 학습 누적층 (자기개선)
 ├── aiagents-deep-research-report.md  # 설계 근거 리서치 보고서
-├── .claude/agents/team-architect.md  # 팀 빌더(팩토리)
+├── claude-opus-4.8-운영노트.md       # 현행 모델 기준 (라인업·effort·프롬프트)
+├── .claude/
+│   ├── agents/                       # 본부 전담: team-architect(팀 빌더) + trend-researcher·
+│   │                                 #   update-curator·team-fit-reviewer·tech-news-reporter
+│   └── skills/                       # /team-assemble · /update-agents(+runs/) · /tech-briefing
+├── briefings/                        # IT 뉴스 브리핑 발행물 (/tech-briefing)
+├── feedback/                         # 각 팀 → 본부 피드백 보고서 (피드백 루프)
 ├── docs_agents/                      # [부서 팀] 문서화 (모델 A)
 ├── QA_agents/                        # [부서 팀] QA (모델 B)
 ├── design_agents/                    # [부서 팀] 디자인 (모델 A)
 ├── dev_agents/                       # [부서 팀] 개발 (모델 B)
 ├── marketing_agents/                 # [부서 팀] 마케팅 (모델 A)
-└── resume_agents/                    # [부서 팀] 이력서·포트폴리오 (모델 A)
+├── resume_agents/                    # [부서 팀] 이력서·포트폴리오 (모델 A)
+├── aiot_agents/                      # [부서 팀] AIoT 기획·설계·개발 (모델 A)
+├── pm_agents/                        # [부서 팀] Jira 프로젝트 관리 (모델 A)
+├── edu_agents/                       # [부서 팀] 교육 교안 (모델 A) — 별도 repo·비커밋
+└── webnovel_agents/                  # [부서 팀] 웹소설 창작 (모델 A) — 비커밋(원고=개인 자산)
 ```
 > 각 `<부서>_agents/`에는 `CLAUDE.md`(그룹장) 옆에 `MEMORY.md`(학습 누적층)가 있고, `CLAUDE.md`가 `@./MEMORY.md`로 자동 로드합니다.
 
