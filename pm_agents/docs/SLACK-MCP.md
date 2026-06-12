@@ -10,7 +10,7 @@
 ## 1. 연결 정보
 - **서버 URL:** `https://mcp.slack.com/mcp` (JSON-RPC 2.0 over **Streamable HTTP** → `.mcp.json` `type: http`, dev/pm의 `github`(http)와 동형)
 - **`.mcp.json` 서버 키:** `slack` → Claude Code 도구명 접두사 `mcp__slack__`
-- **인증:** **Confidential OAuth** — app `client_id` + `client_secret`이 필요합니다.
+- **인증:** Slack 문서상 **Confidential OAuth**(`client_id`+`client_secret`)이나, **Claude Code는 이 방식(DCR)을 직접 수행하지 못한다 → §2-A 검증된 방식(수동 OAuth→Bearer 토큰)을 사용한다.**
 
 ## 2. ⚠️ Confidential OAuth — secret이 비밀값이다 (Atlassian/GitHub과 다름)
 Atlassian·GitHub 원격 MCP는 **순수 OAuth(비밀값 없음)** 라 `.mcp.json`에 URL만 넣으면 됐습니다.
@@ -31,6 +31,25 @@ Atlassian·GitHub 원격 MCP는 **순수 OAuth(비밀값 없음)** 라 `.mcp.jso
 
 > ⚠️ **`.mcp.json`은 에이전트가 생성·수정하지 못할 수 있다**(Claude Code 권한 게이트 차단 — 실사례
 > 2026-06-11, 2회). 위 블록은 에이전트가 완성 JSON으로 제시하고 **사용자가 직접** `.mcp.json`에 붙여넣습니다.
+
+## 2-A. ✅ 검증된 연결 방식 (Claude Code — 수동 OAuth → Bearer 토큰)
+
+[2026-06-12 동행 실측] Claude Code는 **DCR(dynamic client registration) 미지원 서버의 Confidential OAuth를 직접 수행하지 못한다** — `.mcp.json`에 `client_id`/`client_secret`을 넣어도 `authenticate`가 "DCR 미지원" 류로 실패한다. 검증된 우회:
+
+1. **Slack 앱 생성** (manifest, redirect URL `http://localhost:8080/callback`, `is_mcp_enabled: true`), 필요한 읽기/게시 스코프 부여.
+2. **수동 OAuth**: 앱 `client_id`로 authorize URL 생성 → 브라우저 승인 → 콜백 `code` 복사 → `oauth.v2.access`로 교환해 **`xoxp-` 사용자 토큰** 획득.
+3. 토큰을 OS **User 환경변수 `SLACK_MCP_TOKEN`** 에 저장(레포 미커밋, 비밀값).
+4. `.mcp.json`은 `client_id`/`client_secret` 대신 **헤더 주입**:
+   ```json
+   "slack": {
+     "type": "http",
+     "url": "https://mcp.slack.com/mcp",
+     "headers": { "Authorization": "Bearer ${SLACK_MCP_TOKEN}" }
+   }
+   ```
+- ⚠️ 환경변수는 **완전히 새 터미널 창**에서 시작한 프로세스부터 적용된다(기존 창 재사용 시 옛 환경 상속 — 2회 헛걸음 실측).
+- 토큰은 회전 미설정 시 만료 없음, 스코프 추가 시 재인증. **`SLACK_MCP_TOKEN`(xoxp) 실제 값은 `.mcp.json`·MEMORY·커밋·로그에 넣지 않는다.**
+- 아래 §3(client_secret 방식)은 참고용으로 남기되, **Claude Code 환경에선 본 §2-A가 우선**이다.
 
 ## 3-0. ⚠️ 무료 플랜·비관리자 환경 주의 — Confidential OAuth가 불가할 수 있다
 
